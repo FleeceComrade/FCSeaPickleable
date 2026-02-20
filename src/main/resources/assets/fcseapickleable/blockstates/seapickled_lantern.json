@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "quantity=2,hanging=false": {
+      "model": "fcseapickleable:block/lanterns/lantern_2"
+    },
+    "quantity=2,hanging=true": {
+      "model": "fcseapickleable:block/lanterns/lantern_2_hanging"
+    },
+    "quantity=3,hanging=false": {
+      "model": "fcseapickleable:block/lanterns/lantern_3"
+    },
+    "quantity=3,hanging=true": {
+      "model": "fcseapickleable:block/lanterns/lantern_3_hanging"
+    },
+    "quantity=4,hanging=false": {
+      "model": "fcseapickleable:block/lanterns/lantern_4"
+    },
+    "quantity=4,hanging=true": {
+      "model": "fcseapickleable:block/lanterns/lantern_4_hanging"
+    }
+  }
+}

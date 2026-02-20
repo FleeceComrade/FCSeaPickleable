@@ -1,0 +1,14 @@
+{
+  "required": false,
+  "package": "com.fleece.fcseapickleable.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "refmap": "fcseapickleable.refmap.json",
+  "mixins": [
+    "LanternBlockMixin",
+    "BlockItemMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
