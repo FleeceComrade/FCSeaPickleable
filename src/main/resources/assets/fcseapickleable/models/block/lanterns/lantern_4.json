@@ -1,11 +1,10 @@
 {
-	"format_version": "1.9.0",
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"ambientocclusion": false,
 	"render_type": "minecraft:cutout",
 	"textures": {
-		"particle": "fcseapickleable:block/lanterns/lantern",
+		"particle": "#lantern",
 		"lantern": "fcseapickleable:block/lanterns/lantern",
 		"lantern2": "fcseapickleable:block/lanterns/small_lantern",
 		"lantern3": "fcseapickleable:block/lanterns/medium_lantern"

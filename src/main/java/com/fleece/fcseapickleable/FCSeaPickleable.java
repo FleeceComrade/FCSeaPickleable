@@ -23,6 +23,7 @@ public class FCSeaPickleable {
     BLOCKS.register(context.getModEventBus());
   }
 
+  //Todo: move these methods to PlanarCore someday
   /**
    * Combines an array of VoxelShapes down to one shape according to the given BooleanOp.
    * We use a pyramidal method in order to more gradually scale the size of shapes being combined.
