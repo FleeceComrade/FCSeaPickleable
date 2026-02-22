@@ -12,7 +12,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import static com.fleece.fcseapickleable.FCSeaPickleable.joinShapes;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HANGING;
 
-@SuppressWarnings({"deprecation", "NullableProblems"})
+@SuppressWarnings("NullableProblems")
 public class SeaPickledLanternBlock extends AbstractSeaPickleableBlock implements SimpleWaterloggedBlock {
 
   private static final VoxelShape[] HANGING_AABBS = new VoxelShape[] {
@@ -75,5 +75,10 @@ public class SeaPickledLanternBlock extends AbstractSeaPickleableBlock implement
   public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
     int index = blockState.getValue(QUANTITY) - 2;
     return blockState.getValue(HANGING) ? HANGING_AABBS[index] : AABBS[index];
+  }
+
+  @Override
+  public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+    return 15;
   }
 }
