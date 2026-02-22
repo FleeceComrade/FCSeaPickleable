@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "fcseapickleable:seapickled_lantern"
+    "fcseapickleable:seapickled_lantern",
+    "fcseapickleable:seapickled_soul_lantern"
   ]
 }

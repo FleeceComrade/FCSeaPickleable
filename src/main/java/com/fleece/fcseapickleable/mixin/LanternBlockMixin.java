@@ -3,6 +3,7 @@ package com.fleece.fcseapickleable.mixin;
 import com.fleece.fcseapickleable.interfaces.ISeaPickleableBlock;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static com.fleece.fcseapickleable.FCSeaPickleable.copyAllSharedProperties;
 import static com.fleece.fcseapickleable.registry.FCSPBlocks.SEAPICKLED_LANTERN;
+import static com.fleece.fcseapickleable.registry.FCSPBlocks.SEAPICKLED_SOUL_LANTERN;
 
 @SuppressWarnings("deprecation")
 @Mixin(LanternBlock.class)
@@ -23,6 +25,8 @@ public class LanternBlockMixin extends Block implements ISeaPickleableBlock {
 
   @Override
   public Block alternateBlock() {
+    if (Blocks.SOUL_LANTERN.equals(this))
+      return SEAPICKLED_SOUL_LANTERN.get();
     return SEAPICKLED_LANTERN.get();
   }
 

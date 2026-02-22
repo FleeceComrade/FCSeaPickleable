@@ -1,0 +1,7 @@
+{
+  "parent": "fcseapickleable:block/lanterns/lantern_2",
+  "textures": {
+    "lantern": "fcseapickleable:block/lanterns/soul_lantern",
+    "lantern2": "fcseapickleable:block/lanterns/small_soul_lantern"
+  }
+}
