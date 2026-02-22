@@ -3,7 +3,6 @@ package com.fleece.fcseapickleable.interfaces;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static com.fleece.fcseapickleable.FCSeaPickleable.copyAllSharedProperties;
 /**
@@ -24,11 +23,10 @@ public interface ISeaPickleableBlock {
   }
 
   /**
-   * <p>Make sure to use this injection annotation when overriding this in your vanilla class Mixin:</p>
-   * <pre>@Inject(method = "getStateForPlacement", at = @At("HEAD"), cancellable = true)</pre>
-   * **/
-  void fc$onGetStateForPlacement(BlockPlaceContext context, CallbackInfoReturnable<BlockState> cir);
-
-
+   *<pre> @Override
+   *public final boolean canBeReplaced(BlockState blockState, BlockPlaceContext context) {
+   *  return !context.isSecondaryUseActive() && context.getItemInHand().is(this.asItem()) || super.canBeReplaced(blockState, context);
+   *}</pre>
+   */
   boolean canBeReplaced(BlockState blockState, BlockPlaceContext context);
 }

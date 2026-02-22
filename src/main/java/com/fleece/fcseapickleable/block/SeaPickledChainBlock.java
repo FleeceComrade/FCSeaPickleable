@@ -12,6 +12,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 import static com.fleece.fcseapickleable.FCSeaPickleable.joinShapes;
+import static net.minecraft.core.Direction.Axis.X;
+import static net.minecraft.core.Direction.Axis.Y;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.AXIS;
 
 public class SeaPickledChainBlock extends AbstractSeaPickleableBlock implements SimpleWaterloggedBlock {
@@ -88,12 +90,13 @@ public class SeaPickledChainBlock extends AbstractSeaPickleableBlock implements 
     int index = blockState.getValue(QUANTITY) - 2;
     Direction.Axis axis = blockState.getValue(AXIS);
 
-    if (axis == Direction.Axis.X)
+    if (axis == X)
       return AXIS_X_AABBS[index];
 
-    if (axis == Direction.Axis.Y)
+    if (axis == Y)
       return AXIS_Y_AABBS[index];
 
+    // (axis == Z)
     return AXIS_Z_AABBS[index];
   }
 }

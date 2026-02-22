@@ -21,7 +21,6 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,9 +126,6 @@ public abstract class AbstractSeaPickleableBlock extends Block implements ISeaPi
   public final boolean canBeReplaced(BlockState blockState, BlockPlaceContext context) {
     return !context.isSecondaryUseActive() && context.getItemInHand().is(this.asItem()) || super.canBeReplaced(blockState, context);
   }
-
-  @Override
-  public final void fc$onGetStateForPlacement(BlockPlaceContext context, CallbackInfoReturnable<BlockState> cir) {}
 
   private BlockState getNextQuantityState(BlockState blockState) {
     return blockState.getValue(QUANTITY) == 4 ? alternateBlock().defaultBlockState() : blockState.cycle(QUANTITY);
