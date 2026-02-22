@@ -132,8 +132,7 @@ public abstract class AbstractSeaPickleableBlock extends Block implements ISeaPi
   public final void fc$onGetStateForPlacement(BlockPlaceContext context, CallbackInfoReturnable<BlockState> cir) {}
 
   private BlockState getNextQuantityState(BlockState blockState) {
-    BlockState toReturn = blockState.getValue(QUANTITY) == 4 ? alternateBlock().defaultBlockState() : blockState.cycle(QUANTITY);
-    return toReturn;
+    return blockState.getValue(QUANTITY) == 4 ? alternateBlock().defaultBlockState() : blockState.cycle(QUANTITY);
   }
 
   @Override

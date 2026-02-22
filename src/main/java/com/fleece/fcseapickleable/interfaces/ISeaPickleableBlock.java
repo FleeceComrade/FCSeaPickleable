@@ -27,7 +27,7 @@ public interface ISeaPickleableBlock {
    * <p>Make sure to use this injection annotation when overriding this in your vanilla class Mixin:</p>
    * <pre>@Inject(method = "getStateForPlacement", at = @At("HEAD"), cancellable = true)</pre>
    * **/
-  void onGetStateForPlacement(BlockPlaceContext context, CallbackInfoReturnable<BlockState> cir);
+  void fc$onGetStateForPlacement(BlockPlaceContext context, CallbackInfoReturnable<BlockState> cir);
 
 
   boolean canBeReplaced(BlockState blockState, BlockPlaceContext context);
