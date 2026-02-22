@@ -1,0 +1,88 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"ambientocclusion": false,
+	"render_type": "minecraft:cutout",
+	"textures": {
+		"particle": "#chain",
+		"chain": "block/chain"
+	},
+	"elements": [
+		{
+			"from": [9.5, 0, 6],
+			"to": [12.5, 16, 6],
+			"shade": false,
+			"rotation": {"angle": 45, "axis": "y", "origin": [11, 10, 6]},
+			"faces": {
+				"north": {"uv": [3, 0, 0, 16], "texture": "#chain"},
+				"south": {"uv": [0, 0, 3, 16], "texture": "#chain"}
+			}
+		},
+		{
+			"from": [11, 0, 4.5],
+			"to": [11, 16, 7.5],
+			"shade": false,
+			"rotation": {"angle": 45, "axis": "y", "origin": [11, 9, 6]},
+			"faces": {
+				"east": {"uv": [3, 0, 6, 16], "texture": "#chain"},
+				"west": {"uv": [6, 0, 3, 16], "texture": "#chain"}
+			}
+		},
+		{
+			"from": [9, 0, 11.5],
+			"to": [12, 16, 11.5],
+			"rotation": {"angle": -45, "axis": "y", "origin": [10.5, 10, 11.5]},
+			"faces": {
+				"north": {"uv": [3, 0, 6, 16], "texture": "#chain"},
+				"south": {"uv": [3, 0, 6, 16], "texture": "#chain"}
+			}
+		},
+		{
+			"from": [9, 0, 11.5],
+			"to": [12, 16, 11.5],
+			"rotation": {"angle": 45, "axis": "y", "origin": [10.5, 11, 11.5]},
+			"faces": {
+				"north": {"uv": [0, 0, 3, 16], "texture": "#chain"},
+				"south": {"uv": [0, 0, 3, 16], "texture": "#chain"}
+			}
+		},
+		{
+			"from": [4.5, 0, 11],
+			"to": [7.5, 16, 11],
+			"shade": false,
+			"rotation": {"angle": 45, "axis": "y", "origin": [6, 10, 11]},
+			"faces": {
+				"north": {"uv": [3, 0, 0, 16], "texture": "#chain"},
+				"south": {"uv": [0, 0, 3, 16], "texture": "#chain"}
+			}
+		},
+		{
+			"from": [6, 0, 9.5],
+			"to": [6, 16, 12.5],
+			"shade": false,
+			"rotation": {"angle": 45, "axis": "y", "origin": [6, 9, 11]},
+			"faces": {
+				"east": {"uv": [3, 0, 6, 16], "texture": "#chain"},
+				"west": {"uv": [6, 0, 3, 16], "texture": "#chain"}
+			}
+		},
+		{
+			"from": [4, 0, 6.5],
+			"to": [7, 16, 6.5],
+			"rotation": {"angle": 45, "axis": "y", "origin": [5.5, 13, 6.5]},
+			"faces": {
+				"north": {"uv": [0, 0, 3, 16], "texture": "#chain"},
+				"south": {"uv": [0, 0, 3, 16], "texture": "#chain"}
+			}
+		},
+		{
+			"from": [4, 0, 6.5],
+			"to": [7, 16, 6.5],
+			"rotation": {"angle": -45, "axis": "y", "origin": [5.5, 14, 6.5]},
+			"faces": {
+				"north": {"uv": [3, 0, 6, 16], "texture": "#chain"},
+				"south": {"uv": [3, 0, 6, 16], "texture": "#chain"}
+			}
+		}
+	]
+}

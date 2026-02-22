@@ -6,7 +6,9 @@
   "refmap": "fcseapickleable.refmap.json",
   "mixins": [
     "LanternBlockMixin",
-    "BlockItemMixin"
+    "BlockItemMixin",
+    "ChainBlockMixin",
+    "RotatedPillarBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1

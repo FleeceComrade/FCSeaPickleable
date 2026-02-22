@@ -1,5 +1,6 @@
 package com.fleece.fcseapickleable.registry;
 
+import com.fleece.fcseapickleable.block.SeaPickledChainBlock;
 import com.fleece.fcseapickleable.block.SeaPickledLanternBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -14,4 +15,5 @@ public class FCSPBlocks {
 
   public static final RegistryObject<Block> SEAPICKLED_LANTERN = BLOCKS.register("seapickled_lantern", () -> new SeaPickledLanternBlock(Blocks.LANTERN));
   public static final RegistryObject<Block> SEAPICKLED_SOUL_LANTERN = BLOCKS.register("seapickled_soul_lantern", () -> new SeaPickledLanternBlock(Blocks.SOUL_LANTERN));
+  public static final RegistryObject<Block> SEAPICKLED_CHAIN = BLOCKS.register("seapickled_chain", () -> new SeaPickledChainBlock(Blocks.CHAIN));
 }

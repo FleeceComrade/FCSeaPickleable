@@ -1,0 +1,15 @@
+{
+  "variants": {
+    "quantity=2,axis=x": {"model": "fcseapickleable:block/chains/chain_2", "x": 90, "y": 90},
+    "quantity=3,axis=x": {"model": "fcseapickleable:block/chains/chain_3", "x": 90, "y": 90},
+    "quantity=4,axis=x": {"model": "fcseapickleable:block/chains/chain_4", "x": 90, "y": 90},
+
+    "quantity=2,axis=y": {"model": "fcseapickleable:block/chains/chain_2"},
+    "quantity=3,axis=y": {"model": "fcseapickleable:block/chains/chain_3"},
+    "quantity=4,axis=y": {"model": "fcseapickleable:block/chains/chain_4"},
+
+    "quantity=2,axis=z": {"model": "fcseapickleable:block/chains/chain_2", "x": 90},
+    "quantity=3,axis=z": {"model": "fcseapickleable:block/chains/chain_3", "x": 90},
+    "quantity=4,axis=z": {"model": "fcseapickleable:block/chains/chain_4", "x": 90}
+  }
+}
