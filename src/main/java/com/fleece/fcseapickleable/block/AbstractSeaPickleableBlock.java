@@ -17,8 +17,12 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.HitResult;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.fleece.fcseapickleable.FCSeaPickleable.copyAllSharedProperties;
 
@@ -41,7 +45,6 @@ public abstract class AbstractSeaPickleableBlock extends Block implements ISeaPi
     CTOR_ALTERNATE.set(alternateBlock);
     return Properties.copy(alternateBlock);
   }
-
 
   /**
    * The following are normal methods of Block being deferred to the SeaPickleableBlock's alternate.
@@ -81,8 +84,25 @@ public abstract class AbstractSeaPickleableBlock extends Block implements ISeaPi
   }
 
   @Override
-  public final ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
-    return alternateBlock().getCloneItemStack(state, target, level, pos, player);
+  public final List<ItemStack> getDrops(BlockState blockState, LootParams.Builder lootParamsBuilder) {
+    List<ItemStack> drops = new ArrayList<>();
+    for (int i = 0; i < blockState.getValue(QUANTITY); i++) {
+      drops.addAll(alternateBlock().getDrops(blockState, lootParamsBuilder).stream().filter(itemStack -> {
+        for (ItemStack drop : drops) {
+          if (drop.getItem().equals(itemStack.getItem())) {
+            drop.grow(itemStack.getCount());
+            return false;
+          }
+        }
+        return true;
+      }).toList());
+    }
+    return drops;
+  }
+
+  @Override
+  public final ItemStack getCloneItemStack(BlockState blockState, HitResult hitResult, BlockGetter blockGetter, BlockPos blockPos, Player player) {
+    return alternateBlock().getCloneItemStack(blockState, hitResult, blockGetter, blockPos, player);
   }
 
   @Override
@@ -105,7 +125,6 @@ public abstract class AbstractSeaPickleableBlock extends Block implements ISeaPi
 
   private BlockState getNextQuantityState(BlockState blockState) {
     BlockState toReturn = blockState.getValue(QUANTITY) == 4 ? alternateBlock().defaultBlockState() : blockState.cycle(QUANTITY);
-    System.out.println("toReturn? " + toReturn);
     return toReturn;
   }
 
