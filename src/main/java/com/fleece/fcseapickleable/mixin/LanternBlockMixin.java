@@ -29,9 +29,7 @@ public class LanternBlockMixin extends Block implements ISeaPickleableBlock {
   @Inject(method = "getStateForPlacement", at = @At("HEAD"), cancellable = true)
   public void onGetStateForPlacement(BlockPlaceContext context, CallbackInfoReturnable<BlockState> cir) {
     BlockState inWorld = context.getLevel().getBlockState(context.getClickedPos());
-    System.out.println("In world: " + inWorld);
     if (inWorld.is(this)) {
-      System.out.println("Is this!");
       cir.setReturnValue(this.seaPickled(inWorld));
     }
   }

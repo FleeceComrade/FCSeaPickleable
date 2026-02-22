@@ -54,7 +54,6 @@ public class FCSeaPickleable {
       if (!Arrays.stream(excluded).toList().contains(property))
         to = copyIfPresent(from, to, property);
     }
-    System.out.println("Giving - " + to);
     return to;
   }
 }
