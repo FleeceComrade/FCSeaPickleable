@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
@@ -98,5 +99,10 @@ public class SeaPickledChainBlock extends AbstractSeaPickleableBlock implements 
 
     // (axis == Z)
     return AXIS_Z_AABBS[index];
+  }
+
+  @Override
+  public VoxelShape getBlockSupportShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+    return Shapes.block();
   }
 }
