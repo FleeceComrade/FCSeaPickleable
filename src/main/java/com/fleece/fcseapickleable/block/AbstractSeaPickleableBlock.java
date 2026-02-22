@@ -19,6 +19,8 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
@@ -45,6 +47,12 @@ public abstract class AbstractSeaPickleableBlock extends Block implements ISeaPi
     CTOR_ALTERNATE.set(alternateBlock);
     return Properties.copy(alternateBlock);
   }
+
+  /**
+   * This should be the only method that ALL subclasses <i>must</i> implement.
+   */
+  @Override
+  public abstract VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext);
 
   /**
    * The following are normal methods of Block being deferred to the SeaPickleableBlock's alternate.
@@ -121,7 +129,7 @@ public abstract class AbstractSeaPickleableBlock extends Block implements ISeaPi
   }
 
   @Override
-  public final void onGetStateForPlacement(BlockPlaceContext context, CallbackInfoReturnable<BlockState> cir) {}
+  public final void fc$onGetStateForPlacement(BlockPlaceContext context, CallbackInfoReturnable<BlockState> cir) {}
 
   private BlockState getNextQuantityState(BlockState blockState) {
     BlockState toReturn = blockState.getValue(QUANTITY) == 4 ? alternateBlock().defaultBlockState() : blockState.cycle(QUANTITY);
