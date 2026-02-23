@@ -31,12 +31,8 @@ public class BlockItemMixin {
     BlockState thisPlacement = this.getPlacementState(context);
     BlockState inWorld = context.getLevel().getBlockState(context.getClickedPos());
     ItemStack itemstack = context.getItemInHand();
-    System.out.println("This is taking plaaace");
     if ((thisPlacement.getBlock() instanceof ISeaPickleableBlock && !(thisPlacement.getBlock() instanceof AbstractSeaPickleableBlock))) {
-      System.out.println("thisPlacement is ISeaPickleable and not Abstract!");
-      System.out.println("inWorld: " + inWorld);
       if (inWorld.getBlock() instanceof AbstractSeaPickleableBlock) {
-        System.out.println("inWorld is Abstract");
         itemstack.setCount(Math.min(itemstack.getMaxStackSize(), itemstack.getCount() + 4));
       }
     }
