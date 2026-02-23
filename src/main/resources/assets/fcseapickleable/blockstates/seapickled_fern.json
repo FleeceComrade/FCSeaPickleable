@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "quantity=2": [
+      {"model": "fcseapickleable:block/grasses/fern_2"},
+      {"model": "fcseapickleable:block/grasses/fern_2", "y": 90},
+      {"model": "fcseapickleable:block/grasses/fern_2", "y": 180},
+      {"model": "fcseapickleable:block/grasses/fern_2", "y": 270}
+    ],
+    "quantity=3": [
+      {"model": "fcseapickleable:block/grasses/fern_3"},
+      {"model": "fcseapickleable:block/grasses/fern_3", "y": 90},
+      {"model": "fcseapickleable:block/grasses/fern_3", "y": 180},
+      {"model": "fcseapickleable:block/grasses/fern_3", "y": 270}
+    ],
+    "quantity=4": [
+      {"model": "fcseapickleable:block/grasses/fern_4"},
+      {"model": "fcseapickleable:block/grasses/fern_4", "y": 90},
+      {"model": "fcseapickleable:block/grasses/fern_4", "y": 180},
+      {"model": "fcseapickleable:block/grasses/fern_4", "y": 270}
+    ]
+  }
+}
