@@ -1,11 +1,14 @@
 package com.fleece.fcseapickleable;
 
+import com.fleece.fcseapickleable.render.ColorManager;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import java.util.Arrays;
@@ -15,12 +18,16 @@ import static com.fleece.fcseapickleable.registry.FCSPBlocks.BLOCKS;
 
 @Mod(FCSeaPickleable.MODID)
 public class FCSeaPickleable {
-  //Todo: create all 6 voxel shapes
-  //Todo: create 5 more models
   public static final String MODID = "fcseapickleable";
 
   public FCSeaPickleable(FMLJavaModLoadingContext context) {
-    BLOCKS.register(context.getModEventBus());
+    IEventBus bus = context.getModEventBus();
+    bus.addListener(this::clientSetup);
+    BLOCKS.register(bus);
+  }
+
+  public void clientSetup(final FMLClientSetupEvent event) {
+    ColorManager.register();
   }
 
   //Todo: move these methods to PlanarCore someday
