@@ -2,6 +2,7 @@ package com.fleece.fcseapickleable.registry;
 
 import com.fleece.fcseapickleable.block.SeaPickledChainBlock;
 import com.fleece.fcseapickleable.block.SeaPickledLanternBlock;
+import com.fleece.fcseapickleable.block.SeaPickledPumpkinBlock;
 import com.fleece.fcseapickleable.block.SeaPickledTallGrassBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;

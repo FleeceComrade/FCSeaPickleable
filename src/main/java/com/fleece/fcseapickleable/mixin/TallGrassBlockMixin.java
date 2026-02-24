@@ -1,6 +1,6 @@
 package com.fleece.fcseapickleable.mixin;
 
-import com.fleece.fcseapickleable.interfaces.ISeaPickleableBlock;
+import com.fleece.fcseapickleable.block.ISeaPickleableBlock;
 import com.fleece.fcseapickleable.registry.FCSPBlocks;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(TallGrassBlock.class)
 public class TallGrassBlockMixin extends Block implements ISeaPickleableBlock {
 
-  public TallGrassBlockMixin() {
+  private TallGrassBlockMixin() {
     super(Properties.of());
   }
 

@@ -1,7 +1,7 @@
 package com.fleece.fcseapickleable.mixin;
 
 import com.fleece.fcseapickleable.block.AbstractSeaPickleableBlock;
-import com.fleece.fcseapickleable.interfaces.ISeaPickleableBlock;
+import com.fleece.fcseapickleable.block.ISeaPickleableBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;

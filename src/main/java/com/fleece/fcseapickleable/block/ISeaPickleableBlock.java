@@ -1,4 +1,4 @@
-package com.fleece.fcseapickleable.interfaces;
+package com.fleece.fcseapickleable.block;
 
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;

@@ -18,6 +18,8 @@ import static com.fleece.fcseapickleable.registry.FCSPBlocks.BLOCKS;
 
 @Mod(FCSeaPickleable.MODID)
 public class FCSeaPickleable {
+  //Todo: Flower Pots
+  //Todo: translations
   public static final String MODID = "fcseapickleable";
 
   public FCSeaPickleable(FMLJavaModLoadingContext context) {

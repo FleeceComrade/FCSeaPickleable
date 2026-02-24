@@ -1,6 +1,5 @@
 package com.fleece.fcseapickleable.block;
 
-import com.fleece.fcseapickleable.interfaces.ISeaPickleableBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
