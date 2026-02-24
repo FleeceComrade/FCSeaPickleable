@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "quantity=2": [
+      {"model": "fcseapickleable:block/vine_fruits/pumpkin_2"}
+    ],
+    "quantity=3": [
+      {"model": "fcseapickleable:block/vine_fruits/pumpkin_3"}
+    ],
+    "quantity=4": [
+      {"model": "fcseapickleable:block/vine_fruits/pumpkin_4"}
+    ]
+  }
+}

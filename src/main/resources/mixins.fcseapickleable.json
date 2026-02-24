@@ -8,7 +8,8 @@
     "LanternBlockMixin",
     "BlockItemMixin",
     "ChainBlockMixin",
-    "TallGrassBlockMixin"
+    "TallGrassBlockMixin",
+    "PumpkinBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1

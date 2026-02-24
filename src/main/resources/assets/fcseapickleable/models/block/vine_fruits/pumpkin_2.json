@@ -1,0 +1,41 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"particle": "#medium",
+		"medium": "fcseapickleable:block/vine_fruits/medium_pumpkin_side",
+		"medium_bottom": "fcseapickleable:block/vine_fruits/medium_pumpkin_bottom",
+		"medium_top": "fcseapickleable:block/vine_fruits/medium_pumpkin_top",
+		"small": "fcseapickleable:block/vine_fruits/small_pumpkin_side",
+		"small_bottom": "fcseapickleable:block/vine_fruits/small_pumpkin_bottom",
+		"small_top": "fcseapickleable:block/vine_fruits/small_pumpkin_top"
+	},
+	"elements": [
+		{
+			"from": [1, 0, 1],
+			"to": [9, 8, 9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-2, 0, -2]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#medium"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#medium"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#medium"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#medium"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#medium_top"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#medium_bottom"}
+			}
+		},
+		{
+			"from": [10, 0, 10],
+			"to": [15, 5, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [10, 0, 12]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#small"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#small"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#small"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#small"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#small_top"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#small_bottom"}
+			}
+		}
+	]
+}

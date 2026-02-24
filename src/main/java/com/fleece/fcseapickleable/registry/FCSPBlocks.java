@@ -21,4 +21,6 @@ public class FCSPBlocks {
 
   public static final RegistryObject<Block> SEAPICKLED_GRASS = BLOCKS.register("seapickled_grass", () -> new SeaPickledTallGrassBlock(Blocks.GRASS));
   public static final RegistryObject<Block> SEAPICKLED_FERN = BLOCKS.register("seapickled_fern", () -> new SeaPickledTallGrassBlock(Blocks.FERN));
+
+  public static final RegistryObject<Block> SEAPICKLED_PUMPKIN = BLOCKS.register("seapickled_pumpkin", () -> new SeaPickledPumpkinBlock(Blocks.PUMPKIN));
 }
