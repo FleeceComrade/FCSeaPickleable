@@ -15,7 +15,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -28,9 +27,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.fleece.fcseapickleable.FCSeaPickleable.getNonPottedVariant;
+import static com.fleece.fcseapickleable.FCSeaPickleable.POTTED_STUFF_BIMAP;
 import static com.fleece.fcseapickleable.block.AbstractSeaPickleableBlock.QUANTITY;
-import static net.minecraft.world.level.block.Block.dropResources;
 import static net.minecraft.world.level.block.Block.popResource;
 
 @Mixin(BlockItem.class)
@@ -45,7 +43,7 @@ public class BlockItemMixin {
         if (inWorld.getBlock() instanceof SeaPickledFlowerPotBlock flowerPotBlock && inWorld.getValue(QUANTITY) == 4) {
           BlockEntity blockEntity = context.getLevel().getBlockEntity(context.getClickedPos());
           if (blockEntity instanceof SeaPickledFlowerPotBlockEntity flowerPotBlockEntity) {
-            cir.setReturnValue(((FlowerPotBlock) Blocks.FLOWER_POT).getFullPotsView().getOrDefault(ForgeRegistries.BLOCKS.getKey(flowerPotBlockEntity.getContent(0)), () -> Blocks.FLOWER_POT).get().defaultBlockState());
+            cir.setReturnValue(POTTED_STUFF_BIMAP.getValueOrDefault(ForgeRegistries.BLOCKS.getKey(flowerPotBlockEntity.getContent(0)), Blocks.FLOWER_POT).defaultBlockState());
           }
         } else {
           cir.setReturnValue(((ISeaPickleableBlock) inWorld.getBlock()).seaPickled(inWorld));
@@ -73,7 +71,7 @@ public class BlockItemMixin {
             potData.get().put(i, ForgeRegistries.BLOCKS.getKey(flowerPotBlockEntity.getContent(i)).toString());
           }
         } else {
-          potData.get().put(0, getNonPottedVariant(ForgeRegistries.BLOCKS.getKey(inWorld.getBlock()).toString()));
+          potData.get().put(0, POTTED_STUFF_BIMAP.getKeyOrDefault(inWorld.getBlock(), ResourceLocation.parse("minecraft:air")).toString());
         }
       }
     }
@@ -96,9 +94,11 @@ public class BlockItemMixin {
     if (state.is(BlockTags.FLOWER_POTS)) {
       potData.get().replace(0, "minecraft:air");
       for (String pottedBlockId : potData.get().values())
-        popResource(context.getLevel(), context.getClickedPos(), new ItemStack(ForgeRegistries.BLOCKS.getValue(ResourceLocation.parse(pottedBlockId))));
+        if (!context.getPlayer().isCreative())
+          popResource(context.getLevel(), context.getClickedPos(), new ItemStack(ForgeRegistries.BLOCKS.getValue(ResourceLocation.parse(pottedBlockId))));
     }
     potData.get().clear();
+    System.out.println("pot data cleared");
   }
 
   @Inject(

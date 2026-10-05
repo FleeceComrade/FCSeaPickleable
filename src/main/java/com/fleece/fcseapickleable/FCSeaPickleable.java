@@ -3,9 +3,12 @@ package com.fleece.fcseapickleable;
 import com.fleece.fcseapickleable.blockentity.SeaPickledFlowerPotBlockEntity;
 import com.fleece.fcseapickleable.registry.FCSPBlockEntityTypes;
 import com.fleece.fcseapickleable.render.ColorManager;
+import com.fleece.fcseapickleable.util.SimpleImmutableReferenceBiMap;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -17,13 +20,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.fleece.fcseapickleable.registry.FCSPBlockEntityTypes.BLOCK_ENTITY_TYPES;
@@ -35,13 +37,23 @@ public class FCSeaPickleable {
   //Todo: Flower Pots
   //Todo: translations
   public static final String MODID = "fcseapickleable";
+  public static SimpleImmutableReferenceBiMap<ResourceLocation, Block> POTTED_STUFF_BIMAP = new SimpleImmutableReferenceBiMap<>();
 
   public FCSeaPickleable(FMLJavaModLoadingContext context) {
     IEventBus bus = context.getModEventBus();
     bus.addListener(this::clientSetup);
+    bus.addListener(this::commonSetup);
     BLOCKS.register(bus);
     BLOCK_ENTITY_TYPES.register(bus);
     context.registerConfig(COMMON, FCSPConfig.SPEC);
+  }
+
+  public void commonSetup(final FMLCommonSetupEvent event) {
+    event.enqueueWork(() -> {
+      Map<ResourceLocation, Block> pottedMap = new HashMap<>();
+      ((FlowerPotBlock) Blocks.FLOWER_POT).getFullPotsView().entrySet().stream().map(entry -> Map.entry(entry.getKey(), entry.getValue().get())).forEach(entry -> pottedMap.put(entry.getKey(), entry.getValue()));
+      POTTED_STUFF_BIMAP.init(pottedMap);
+    });
   }
 
   public void clientSetup(final FMLClientSetupEvent event) {

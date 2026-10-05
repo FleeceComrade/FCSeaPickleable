@@ -81,12 +81,15 @@ public class SeaPickledFlowerPotBlock extends AbstractSeaPickleableBlock impleme
 
     if (!level.isClientSide) {
       if (flowerPots.canSetContents(hitIndex, blockItem.getBlock())) {
-        Block.popResource(level, blockPos, new ItemStack(flowerPots.getContent(hitIndex)));
         flowerPots.setContents(hitIndex, blockItem.getBlock());
-        inHand.shrink(1);
+        if (!player.isCreative()) {
+          popResource(level, blockPos, new ItemStack(flowerPots.getContent(hitIndex)));
+          inHand.shrink(1);
+        }
       } else {
         if (!player.isShiftKeyDown()) {
-          Block.popResource(level, blockPos, new ItemStack(flowerPots.getContent(hitIndex)));
+          if (!player.isCreative())
+            popResource(level, blockPos, new ItemStack(flowerPots.getContent(hitIndex)));
           flowerPots.removeContent(hitIndex);
         }
       }
