@@ -1,6 +1,5 @@
 package com.fleece.fcseapickleable.block;
 
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -21,12 +20,4 @@ public interface ISeaPickleableBlock {
   default BlockState seaPickled(BlockState toPickle) {
     return copyAllSharedProperties(toPickle, alternateBlock().defaultBlockState());
   }
-
-  /**
-   *<pre> @Override
-   *public final boolean canBeReplaced(BlockState blockState, BlockPlaceContext context) {
-   *  return !context.isSecondaryUseActive() && context.getItemInHand().is(this.asItem()) || super.canBeReplaced(blockState, context);
-   *}</pre>
-   */
-  boolean canBeReplaced(BlockState blockState, BlockPlaceContext context);
 }

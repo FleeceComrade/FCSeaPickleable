@@ -1,20 +1,34 @@
 package com.fleece.fcseapickleable;
 
+import com.fleece.fcseapickleable.blockentity.SeaPickledFlowerPotBlockEntity;
+import com.fleece.fcseapickleable.registry.FCSPBlockEntityTypes;
 import com.fleece.fcseapickleable.render.ColorManager;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
+import static com.fleece.fcseapickleable.registry.FCSPBlockEntityTypes.BLOCK_ENTITY_TYPES;
 import static com.fleece.fcseapickleable.registry.FCSPBlocks.BLOCKS;
+import static net.minecraftforge.fml.config.ModConfig.Type.COMMON;
 
 @Mod(FCSeaPickleable.MODID)
 public class FCSeaPickleable {
@@ -26,10 +40,15 @@ public class FCSeaPickleable {
     IEventBus bus = context.getModEventBus();
     bus.addListener(this::clientSetup);
     BLOCKS.register(bus);
+    BLOCK_ENTITY_TYPES.register(bus);
+    context.registerConfig(COMMON, FCSPConfig.SPEC);
   }
 
   public void clientSetup(final FMLClientSetupEvent event) {
-    ColorManager.register();
+    event.enqueueWork(() -> {
+      BlockEntityRenderers.register(FCSPBlockEntityTypes.SEAPICKLED_FLOWERPOT.get(), SeaPickledFlowerPotBlockEntity.Renderer::new);
+      ColorManager.register();
+    });
   }
 
   //Todo: move these methods to PlanarCore someday
@@ -49,6 +68,15 @@ public class FCSeaPickleable {
     return stack.pop();
   }
 
+
+  public static BlockState copyAllSharedProperties(BlockState from, BlockState to, Property<?>... excluded) {
+    for (Property<?> property : from.getProperties()) {
+      if (!Arrays.stream(excluded).toList().contains(property))
+        to = copyIfPresent(from, to, property);
+    }
+    return to;
+  }
+
   public static <T extends Comparable<T>> BlockState copyIfPresent(
     BlockState from, BlockState to, Property<T> property
   ) {
@@ -58,11 +86,51 @@ public class FCSeaPickleable {
     return to;
   }
 
-  public static BlockState copyAllSharedProperties(BlockState from, BlockState to, Property<?>... excluded) {
-    for (Property<?> property : from.getProperties()) {
-      if (!Arrays.stream(excluded).toList().contains(property))
-        to = copyIfPresent(from, to, property);
+  public static String getNonPottedVariant(String potted) {
+    return potted.replace("potted_", "");
+  }
+
+  @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+  public static class FCSPConfig {
+    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+
+    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> POTTABLE_BLOCK_STRINGS = BUILDER
+      .comment("List of blocks that can be put into sea-pickled flower pots. There is a tag for this but I added this config for accessibility.")
+      .defineListAllowEmpty("PottableBlocks", List.of(), FCSPConfig::validateBlockString);
+
+    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> CUSTOM_MODEL_POTTABLE_BLOCK_STRINGS = BUILDER
+      .comment("List of blocks that should use a custom model when put into a sea-pickled flower pot. As opposed" +
+        "to just scaling it's usual block model down. There is also a tag for this but again, accessibility.")
+      .defineListAllowEmpty("CustomModelPottableBlocks", List.of(), FCSPConfig::validateBlockString);
+
+
+
+    static final ForgeConfigSpec SPEC = BUILDER.build();
+
+    private static Set<Block> pottableBlocks;
+    private static Set<Block> customModelPottableBlocks;
+
+    private static boolean validateBlockString(Object blockString) {
+      return ForgeRegistries.BLOCKS.containsKey(ResourceLocation.parse(blockString.toString()));
     }
-    return to;
+
+    @SubscribeEvent
+    static void onLoad(final ModConfigEvent event) {
+      pottableBlocks = POTTABLE_BLOCK_STRINGS.get().stream()
+        .map(blockName -> ForgeRegistries.BLOCKS.getValue(ResourceLocation.parse(blockName)))
+        .collect(Collectors.toSet());
+
+      customModelPottableBlocks = CUSTOM_MODEL_POTTABLE_BLOCK_STRINGS.get().stream()
+        .map(blockName -> ForgeRegistries.BLOCKS.getValue(ResourceLocation.parse(blockName)))
+        .collect(Collectors.toSet());
+    }
+
+    public static boolean isPottable(Block block) {
+      return pottableBlocks.contains(block);
+    }
+
+    public static boolean hasCustomPottedModel(Block block) {
+      return customModelPottableBlocks.contains(block);
+    }
   }
 }

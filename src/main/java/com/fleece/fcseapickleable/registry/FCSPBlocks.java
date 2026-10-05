@@ -1,9 +1,6 @@
 package com.fleece.fcseapickleable.registry;
 
-import com.fleece.fcseapickleable.block.SeaPickledChainBlock;
-import com.fleece.fcseapickleable.block.SeaPickledLanternBlock;
-import com.fleece.fcseapickleable.block.SeaPickledPumpkinBlock;
-import com.fleece.fcseapickleable.block.SeaPickledTallGrassBlock;
+import com.fleece.fcseapickleable.block.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.DeferredRegister;
@@ -23,4 +20,6 @@ public class FCSPBlocks {
   public static final RegistryObject<Block> SEAPICKLED_FERN = BLOCKS.register("seapickled_fern", () -> new SeaPickledTallGrassBlock(Blocks.FERN));
 
   public static final RegistryObject<Block> SEAPICKLED_PUMPKIN = BLOCKS.register("seapickled_pumpkin", () -> new SeaPickledPumpkinBlock(Blocks.PUMPKIN));
+
+  public static final RegistryObject<Block> SEAPICKLED_FLOWER_POT = BLOCKS.register("seapickled_flower_pot", () -> new SeaPickledFlowerPotBlock(Blocks.FLOWER_POT));
 }

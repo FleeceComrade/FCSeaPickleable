@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "quantity=2": [
+      {"model": "fcseapickleable:block/pots/flower_pot_2"}
+    ],
+    "quantity=3": [
+      {"model": "fcseapickleable:block/pots/flower_pot_3"}
+    ],
+    "quantity=4": [
+      {"model": "fcseapickleable:block/pots/flower_pot_4"}
+    ]
+  }
+}
