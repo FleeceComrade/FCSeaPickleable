@@ -131,6 +131,8 @@ public class SeaPickledFlowerPotBlock extends AbstractSeaPickleableBlock impleme
       }
     }
 
+    System.out.println("Hit: " + bestIndex);
+    System.out.println("Coords: " + SeaPickledFlowerPotBlockEntity.Renderer.CoordsEnum.get(shapes.length, bestIndex));
     return bestIndex;
   }
 
