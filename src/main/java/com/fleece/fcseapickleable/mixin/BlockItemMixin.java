@@ -89,9 +89,9 @@ public class BlockItemMixin {
   private void fc$afterSuccessfulPlacement(BlockPlaceContext context, CallbackInfoReturnable<InteractionResult> cir) {
     if (potData.get().isEmpty()) return;
     BlockState state = context.getLevel().getBlockState(context.getClickedPos());
-    if (state.getBlock() instanceof SeaPickledFlowerPotBlock && state.getValue(QUANTITY) == 2)
+    if (state.getBlock() instanceof SeaPickledFlowerPotBlock && state.getValue(QUANTITY) == 2) {
       ((SeaPickledFlowerPotBlockEntity) context.getLevel().getBlockEntity(context.getClickedPos())).setContents(0, ForgeRegistries.BLOCKS.getValue(ResourceLocation.parse(potData.get().get(0))));
-    if (state.is(BlockTags.FLOWER_POTS)) {
+    } else if (state.is(BlockTags.FLOWER_POTS)) {
       potData.get().replace(0, "minecraft:air");
       for (String pottedBlockId : potData.get().values())
         if (!context.getPlayer().isCreative())

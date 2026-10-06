@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SimpleImmutableReferenceBiMap<K, V> {
+  private boolean initialized = false;
   private final HashMap<K, V> verse;
   private final HashMap<V, K> inverse;
 
@@ -13,11 +14,13 @@ public class SimpleImmutableReferenceBiMap<K, V> {
   }
 
   public SimpleImmutableReferenceBiMap<K, V> init(Map<K, V> verse) {
+    if (initialized) throw new UnsupportedOperationException("You may NOT initialize a SimpleImmutableReferenceBiMap twice!");
     this.verse.putAll(verse);
     verse.forEach((k, v) -> {
       if (inverse.containsKey(v)) throw new IllegalArgumentException("Input map must not have duplicate values for this type of BiMap");
       inverse.put(v, k);
     });
+    initialized = true;
     return this;
   }
 

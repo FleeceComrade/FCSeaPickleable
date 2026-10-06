@@ -81,11 +81,11 @@ public class SeaPickledFlowerPotBlock extends AbstractSeaPickleableBlock impleme
 
     if (!level.isClientSide) {
       if (flowerPots.canSetContents(hitIndex, blockItem.getBlock())) {
-        flowerPots.setContents(hitIndex, blockItem.getBlock());
         if (!player.isCreative()) {
           popResource(level, blockPos, new ItemStack(flowerPots.getContent(hitIndex)));
           inHand.shrink(1);
         }
+        flowerPots.setContents(hitIndex, blockItem.getBlock());
       } else {
         if (!player.isShiftKeyDown()) {
           if (!player.isCreative())
