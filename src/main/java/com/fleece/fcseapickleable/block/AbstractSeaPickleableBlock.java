@@ -74,6 +74,11 @@ public abstract class AbstractSeaPickleableBlock extends Block implements ISeaPi
     return alternateBlock().isPathfindable(blockState, blockGetter, blockPos, type);
   }
 
+  @Override
+  public ItemStack getCloneItemStack(BlockState blockState, HitResult hitResult, BlockGetter blockGetter, BlockPos blockPos, Player player) {
+    return alternateBlock().getCloneItemStack(blockState, hitResult, blockGetter, blockPos, player);
+  }
+
   /**
    * The following methods are final because subclasses should not be changing these; if they are trying to, they aren't a true to theme "SeaPickleableBlock"
    * **/
@@ -103,11 +108,6 @@ public abstract class AbstractSeaPickleableBlock extends Block implements ISeaPi
       }).toList());
     }
     return drops;
-  }
-
-  @Override
-  public final ItemStack getCloneItemStack(BlockState blockState, HitResult hitResult, BlockGetter blockGetter, BlockPos blockPos, Player player) {
-    return alternateBlock().getCloneItemStack(blockState, hitResult, blockGetter, blockPos, player);
   }
 
   @Override

@@ -1,0 +1,6 @@
+{
+  "parent": "fcseapickleable:block/pots/custom/template_pot_cross",
+  "textures": {
+    "plant": "minecraft:block/warped_roots_pot"
+  }
+}

@@ -2,7 +2,9 @@ package com.fleece.fcseapickleable.blockentity;
 
 import com.fleece.fcseapickleable.registry.FCSPBlockEntityTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -15,13 +17,15 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 
-import static com.fleece.fcseapickleable.FCSeaPickleable.MODID;
+import static com.fleece.fcseapickleable.FCSeaPickleable.*;
 import static com.fleece.fcseapickleable.block.AbstractSeaPickleableBlock.QUANTITY;
 
 @SuppressWarnings("deprecation")
@@ -164,34 +168,34 @@ public class SeaPickledFlowerPotBlockEntity extends BlockEntity {
   public static class Renderer implements BlockEntityRenderer<SeaPickledFlowerPotBlockEntity> {
     private final BlockRenderDispatcher blockRenderer;
 
-    public enum CoordsEnum {
+    public enum CoordsByQuantity {
       TWO(
-        new Coords(6.0, 4.0, 6.0),
-        new Coords(10.5, 4.0, 11.5)
+        new Coords(6.0, 4.0, 6.0, 0.75f),
+        new Coords(10.5, 4.0, 11.5, 0.625f)
       ),
       THREE(
-        new Coords(5.0, 4.0, 10.0),
-        new Coords(8.0, 3.0, 5.0),
-        new Coords(10.5, 4.0, 9.5)
+        new Coords(5.0, 4.0, 10.0, 0.75f),
+        new Coords(8.0, 3.0, 5.0, 0.5f),
+        new Coords(10.5, 4.0, 9.5, 0.625f)
       ),
       FOUR(
-        new Coords(11.0, 4.0, 10.0),
-        new Coords(5.5, 4.0, 10.5),
-        new Coords(5.0, 4.0, 5.0),
-        new Coords(10.0, 3.0, 5.0)
+        new Coords(11.0, 4.01, 10.0, 0.75f),
+        new Coords(5.5, 4.0, 10.5, 0.625f),
+        new Coords(5.0, 4.0, 5.0, 0.75f),
+        new Coords(10.0, 3.0, 5.0, 0.5f)
       );
 
-      final Coords[] coords;
+      private final Coords[] coords;
 
-      CoordsEnum(Coords... coords) {
+      CoordsByQuantity(Coords... coords) {
         this.coords = coords;
       }
 
       public static Coords get(int quantity, int index) {
-        return CoordsEnum.values()[quantity - 2].coords[index];
+        return CoordsByQuantity.values()[quantity - 2].coords[index];
       }
 
-      private record Coords(double x, double y, double z) {}
+      private record Coords(double x, double y, double z, float scale) {}
     }
 
     public Renderer(BlockEntityRendererProvider.Context context) {
@@ -211,7 +215,7 @@ public class SeaPickledFlowerPotBlockEntity extends BlockEntity {
 
       for (int i = 0; i < quantity; i++) {
         BlockState state = blockEntity.getContent(i).defaultBlockState();
-        CoordsEnum.Coords coords = CoordsEnum.get(quantity, i);
+        CoordsByQuantity.Coords coords = CoordsByQuantity.get(quantity, i);
 
         poseStack.pushPose();
 
@@ -221,16 +225,45 @@ public class SeaPickledFlowerPotBlockEntity extends BlockEntity {
           coords.z() / 16.0
         );
 
-        poseStack.scale(0.75f, 0.75f, 0.75f);
-        poseStack.translate(-0.5, 0.0, -0.5);
+        if (CUSTOM_POT_BY_BLOCK.containsKey(state.getBlock())) {
+          BakedModel model = CUSTOM_POT_BY_BLOCK.get(state.getBlock());
 
-        blockRenderer.renderSingleBlock(
-          state,
-          poseStack,
-          bufferSource,
-          packedLight,
-          packedOverlay
-        );
+          float scale = Math.min(1f, coords.scale() * 1.33f);
+          poseStack.scale(scale, scale, scale);
+          poseStack.translate(-0.5, -0.25, -0.5);
+
+          VertexConsumer consumer = bufferSource.getBuffer(RenderType.cutout());
+
+          Level level = blockEntity.getLevel();
+          BlockPos pos = blockEntity.getBlockPos();
+          BlockState potState = blockEntity.getBlockState();
+
+          blockRenderer.getModelRenderer().tesselateBlock(
+            level,
+            model,
+            potState,
+            pos,
+            poseStack,
+            consumer,
+            false,
+            level.getRandom(),
+            potState.getSeed(pos),
+            packedOverlay,
+            ModelData.EMPTY,
+            RenderType.cutout()
+          );
+        } else {
+          poseStack.scale(coords.scale(), coords.scale(), coords.scale());
+          poseStack.translate(-0.5, 0.0, -0.5);
+
+          blockRenderer.renderSingleBlock(
+            state,
+            poseStack,
+            bufferSource,
+            packedLight,
+            packedOverlay
+          );
+        }
 
         poseStack.popPose();
       }

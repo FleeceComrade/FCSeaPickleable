@@ -98,7 +98,6 @@ public class BlockItemMixin {
           popResource(context.getLevel(), context.getClickedPos(), new ItemStack(ForgeRegistries.BLOCKS.getValue(ResourceLocation.parse(pottedBlockId))));
     }
     potData.get().clear();
-    System.out.println("pot data cleared");
   }
 
   @Inject(

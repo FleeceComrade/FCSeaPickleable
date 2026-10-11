@@ -2,6 +2,7 @@ package com.fleece.fcseapickleable.block;
 
 import com.fleece.fcseapickleable.blockentity.SeaPickledFlowerPotBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -10,9 +11,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -22,7 +25,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import static com.fleece.fcseapickleable.FCSeaPickleable.FCSPConfig.isPottable;
 import static com.fleece.fcseapickleable.FCSeaPickleable.joinShapes;
 import static com.fleece.fcseapickleable.blockentity.SeaPickledFlowerPotBlockEntity.POTTABLE;
 
@@ -63,43 +65,79 @@ public class SeaPickledFlowerPotBlock extends AbstractSeaPickleableBlock impleme
   }
 
   @Override
+  public ItemStack getCloneItemStack(BlockState blockState, HitResult hitResult, BlockGetter level, BlockPos blockPos, Player player) {
+    if (player.isShiftKeyDown())
+      return new ItemStack(Blocks.FLOWER_POT);
+
+    BlockEntity blockEntity = level.getBlockEntity(blockPos);
+    if (blockEntity instanceof SeaPickledFlowerPotBlockEntity flowerPotBlockEntity && hitResult instanceof BlockHitResult blockHitResult)
+      return new ItemStack(flowerPotBlockEntity.getContent(firstHitIndex(player, blockPos, blockHitResult, BOXES[blockState.getValue(QUANTITY) - 2])));
+
+    return super.getCloneItemStack(level, blockPos, blockState);
+  }
+
+  @Override
   public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
     return new SeaPickledFlowerPotBlockEntity(blockPos, blockState);
   }
 
   @Override
   public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-    ItemStack inHand = player.getItemInHand(interactionHand);
-    if (!(inHand.getItem() instanceof BlockItem blockItem)) return InteractionResult.PASS;
-    if (!canBePotted(blockItem.getBlock())) return InteractionResult.PASS;
-
     BlockEntity be = level.getBlockEntity(blockPos);
     if (!(be instanceof SeaPickledFlowerPotBlockEntity flowerPots)) return InteractionResult.PASS;
 
     int hitIndex = firstHitIndex(player, blockPos, blockHitResult, BOXES[blockState.getValue(QUANTITY) - 2]);
     if (hitIndex < 0) return InteractionResult.PASS;
 
+    ItemStack inHand = player.getItemInHand(interactionHand);
+    Block heldBlock = inHand.getItem() instanceof BlockItem blockItem && canBePotted(blockItem.getBlock())
+      ? blockItem.getBlock()
+      : Blocks.AIR;
+
+    Block content = flowerPots.getContent(hitIndex);
+
+    boolean isPottable = heldBlock != Blocks.AIR;
+    boolean isEmpty = content == Blocks.AIR;
+    boolean isCreative = player.getAbilities().instabuild;
+
+    if (isPottable && heldBlock == content) return InteractionResult.CONSUME;
+    if (!isPottable && isEmpty) return InteractionResult.CONSUME;
+    if (isPottable && isEmpty && !flowerPots.canSetContents(hitIndex, heldBlock)) return InteractionResult.CONSUME;
+
     if (!level.isClientSide) {
-      if (flowerPots.canSetContents(hitIndex, blockItem.getBlock())) {
-        if (!player.isCreative()) {
-          popResource(level, blockPos, new ItemStack(flowerPots.getContent(hitIndex)));
+      if (isPottable) {
+        if (!isEmpty && !isCreative) {
+          popResource(level, blockPos, new ItemStack(content));
+        }
+
+        flowerPots.setContents(hitIndex, heldBlock);
+        player.awardStat(Stats.POT_FLOWER);
+
+        if (!isCreative) {
           inHand.shrink(1);
         }
-        flowerPots.setContents(hitIndex, blockItem.getBlock());
       } else {
-        if (!player.isShiftKeyDown()) {
-          if (!player.isCreative())
-            popResource(level, blockPos, new ItemStack(flowerPots.getContent(hitIndex)));
-          flowerPots.removeContent(hitIndex);
+        if (!isCreative) {
+          ItemStack extracted = new ItemStack(content);
+
+          if (inHand.isEmpty()) {
+            player.setItemInHand(interactionHand, extracted);
+          } else if (!player.addItem(extracted)) {
+            player.drop(extracted, false);
+          }
         }
+
+        flowerPots.removeContent(hitIndex);
       }
+
+      level.gameEvent(player, GameEvent.BLOCK_CHANGE, blockPos);
     }
 
     return InteractionResult.sidedSuccess(level.isClientSide);
   }
 
   public static boolean canBePotted(Block block) {
-    return block.builtInRegistryHolder().is(POTTABLE) || isPottable(block);
+    return block.builtInRegistryHolder().is(POTTABLE);
   }
 
   private static int firstHitIndex(Player player, BlockPos pos, BlockHitResult originalHit, VoxelShape[] shapes) {
@@ -130,9 +168,6 @@ public class SeaPickledFlowerPotBlock extends AbstractSeaPickleableBlock impleme
         bestIndex = i;
       }
     }
-
-    System.out.println("Hit: " + bestIndex);
-    System.out.println("Coords: " + SeaPickledFlowerPotBlockEntity.Renderer.CoordsEnum.get(shapes.length, bestIndex));
     return bestIndex;
   }
 

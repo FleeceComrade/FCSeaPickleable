@@ -1,0 +1,6 @@
+{
+  "parent": "fcseapickleable:block/pots/custom/template_pot_cross",
+  "textures": {
+    "plant": "minecraft:block/crimson_roots_pot"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "fcseapickleable:block/pots/custom/template_azalea",
+  "textures": {
+    "plant": "minecraft:block/potted_azalea_bush_plant",
+    "side": "minecraft:block/potted_azalea_bush_side",
+    "top": "minecraft:block/potted_azalea_bush_top"
+  }
+}
