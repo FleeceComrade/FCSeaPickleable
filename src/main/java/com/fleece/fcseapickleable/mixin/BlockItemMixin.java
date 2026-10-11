@@ -37,7 +37,7 @@ public class BlockItemMixin {
 
   @Inject(method = "getPlacementState", at = @At("HEAD"), cancellable = true)
   private void fc$onGetPlacementState(BlockPlaceContext context, CallbackInfoReturnable<BlockState> cir) {
-    if (this.getBlock() instanceof ISeaPickleableBlock iSeaPickleable) {
+    if (this.getBlock() instanceof ISeaPickleableBlock iSeaPickleable && iSeaPickleable.isPickleable()) {
       BlockState inWorld = context.getLevel().getBlockState(context.getClickedPos());
       if (inWorld.is(this.getBlock()) || inWorld.is(iSeaPickleable.alternateBlock())) {
         if (inWorld.getBlock() instanceof SeaPickledFlowerPotBlock flowerPotBlock && inWorld.getValue(QUANTITY) == 4) {
@@ -60,7 +60,7 @@ public class BlockItemMixin {
     BlockState thisPlacement = this.getPlacementState(context);
     BlockState inWorld = context.getLevel().getBlockState(context.getClickedPos());
     ItemStack itemstack = context.getItemInHand();
-    if (thisPlacement.getBlock() instanceof ISeaPickleableBlock) {
+    if (thisPlacement.getBlock() instanceof ISeaPickleableBlock iSeaPickleableBlock && iSeaPickleableBlock.isPickleable()) {
       if (inWorld.getBlock() instanceof AbstractSeaPickleableBlock && !(thisPlacement.getBlock() instanceof AbstractSeaPickleableBlock))
         itemstack.setCount(Math.min(itemstack.getMaxStackSize(), itemstack.getCount() + 4));
       if (inWorld.getBlock() instanceof SeaPickledFlowerPotBlock || inWorld.is(BlockTags.FLOWER_POTS) && !inWorld.is(Blocks.FLOWER_POT)) {

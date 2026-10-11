@@ -15,6 +15,8 @@ import static com.fleece.fcseapickleable.FCSeaPickleable.copyAllSharedProperties
  * </p>
  * **/
 public interface ISeaPickleableBlock {
+  boolean isPickleable();
+
   Block alternateBlock();
 
   default BlockState seaPickled(BlockState toPickle) {

@@ -3,6 +3,7 @@ package com.fleece.fcseapickleable.mixin;
 import com.fleece.fcseapickleable.block.ISeaPickleableBlock;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,6 +16,11 @@ public class ChainBlockMixin extends Block implements ISeaPickleableBlock {
 
   private ChainBlockMixin() {
     super(Properties.of());
+  }
+
+  @Override
+  public boolean isPickleable() {
+    return this.equals(Blocks.CHAIN);
   }
 
   @Override

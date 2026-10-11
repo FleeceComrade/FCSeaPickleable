@@ -20,10 +20,17 @@ public class LanternBlockMixin extends Block implements ISeaPickleableBlock {
   }
 
   @Override
+  public boolean isPickleable() {
+    return this.equals(Blocks.LANTERN) || this.equals(Blocks.SOUL_LANTERN);
+  }
+
+  @Override
   public Block alternateBlock() {
     if (Blocks.SOUL_LANTERN.equals(this))
       return SEAPICKLED_SOUL_LANTERN.get();
-    return SEAPICKLED_LANTERN.get();
+    if (Blocks.LANTERN.equals(this))
+      return SEAPICKLED_LANTERN.get();
+    throw new IllegalStateException("Contact FleeceComrade, author of FC's Seapickleable, he did something wrong if you are seeing this! fleececomrade@gmail.com or FleeceComradeMods on Curseforge.");
   }
 
   @Override

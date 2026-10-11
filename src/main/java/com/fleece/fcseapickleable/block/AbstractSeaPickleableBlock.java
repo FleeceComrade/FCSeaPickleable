@@ -101,6 +101,11 @@ public abstract class AbstractSeaPickleableBlock extends Block implements ISeaPi
    * **/
 
   @Override
+  public final boolean isPickleable() {
+    return true;
+  }
+
+  @Override
   public final BlockState seaPickled(BlockState toPickle) {
     return copyAllSharedProperties(toPickle, getNextQuantityState(toPickle), QUANTITY);
   }

@@ -5,6 +5,7 @@ import com.fleece.fcseapickleable.registry.FCSPBlocks;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,6 +15,11 @@ public class FlowerPotBlockMixin extends Block implements ISeaPickleableBlock {
 
   public FlowerPotBlockMixin() {
     super(Properties.of());
+  }
+
+  @Override
+  public boolean isPickleable() {
+    return this.equals(Blocks.FLOWER_POT);
   }
 
   @Override

@@ -17,10 +17,17 @@ public class TallGrassBlockMixin extends Block implements ISeaPickleableBlock {
   }
 
   @Override
+  public boolean isPickleable() {
+    return this.equals(Blocks.FERN) || this.equals(Blocks.TALL_GRASS);
+  }
+
+  @Override
   public Block alternateBlock() {
     if (Blocks.FERN.equals(this))
       return FCSPBlocks.SEAPICKLED_FERN.get();
-    return FCSPBlocks.SEAPICKLED_GRASS.get();
+    if (Blocks.TALL_GRASS.equals(this))
+      return FCSPBlocks.SEAPICKLED_GRASS.get();
+    throw new IllegalStateException("Contact FleeceComrade, author of FC's Seapickleable, he did something wrong if you are seeing this! fleececomrade@gmail.com or FleeceComradeMods on Curseforge.");
   }
 
   @Override
