@@ -75,6 +75,23 @@ public abstract class AbstractSeaPickleableBlock extends Block implements ISeaPi
   }
 
   @Override
+  public List<ItemStack> getDrops(BlockState blockState, LootParams.Builder lootParamsBuilder) {
+    List<ItemStack> drops = new ArrayList<>();
+    for (int i = 0; i < blockState.getValue(QUANTITY); i++) {
+      drops.addAll(alternateBlock().getDrops(blockState, lootParamsBuilder).stream().filter(itemStack -> {
+        for (ItemStack drop : drops) {
+          if (drop.getItem().equals(itemStack.getItem())) {
+            drop.grow(itemStack.getCount());
+            return false;
+          }
+        }
+        return true;
+      }).toList());
+    }
+    return drops;
+  }
+
+  @Override
   public ItemStack getCloneItemStack(BlockState blockState, HitResult hitResult, BlockGetter blockGetter, BlockPos blockPos, Player player) {
     return alternateBlock().getCloneItemStack(blockState, hitResult, blockGetter, blockPos, player);
   }
@@ -91,23 +108,6 @@ public abstract class AbstractSeaPickleableBlock extends Block implements ISeaPi
   @Override
   public final Block alternateBlock() {
     return this.alternateBlock;
-  }
-
-  @Override
-  public final List<ItemStack> getDrops(BlockState blockState, LootParams.Builder lootParamsBuilder) {
-    List<ItemStack> drops = new ArrayList<>();
-    for (int i = 0; i < blockState.getValue(QUANTITY); i++) {
-      drops.addAll(alternateBlock().getDrops(blockState, lootParamsBuilder).stream().filter(itemStack -> {
-        for (ItemStack drop : drops) {
-          if (drop.getItem().equals(itemStack.getItem())) {
-            drop.grow(itemStack.getCount());
-            return false;
-          }
-        }
-        return true;
-      }).toList());
-    }
-    return drops;
   }
 
   @Override

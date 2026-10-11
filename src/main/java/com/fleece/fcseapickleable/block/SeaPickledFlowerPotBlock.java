@@ -17,6 +17,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -24,6 +26,9 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.fleece.fcseapickleable.FCSeaPickleable.joinShapes;
 import static com.fleece.fcseapickleable.blockentity.SeaPickledFlowerPotBlockEntity.POTTABLE;
@@ -79,6 +84,28 @@ public class SeaPickledFlowerPotBlock extends AbstractSeaPickleableBlock impleme
   @Override
   public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
     return new SeaPickledFlowerPotBlockEntity(blockPos, blockState);
+  }
+
+  @Override
+  public List<ItemStack> getDrops(BlockState blockState, LootParams.Builder lootParamsBuilder) {
+    List<ItemStack> drops = new ArrayList<>();
+    for (int i = 0; i < blockState.getValue(QUANTITY); i++) {
+      drops.addAll(alternateBlock().getDrops(blockState, lootParamsBuilder).stream().filter(itemStack -> {
+        for (ItemStack drop : drops) {
+          if (drop.getItem().equals(itemStack.getItem())) {
+            drop.grow(itemStack.getCount());
+            return false;
+          }
+        }
+        return true;
+      }).toList());
+    }
+    if (lootParamsBuilder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof SeaPickledFlowerPotBlockEntity flowerPotBlockEntity)
+      for (int i = 0; i < blockState.getValue(QUANTITY); i++) {
+        if (flowerPotBlockEntity.getContent(i) != Blocks.AIR)
+          drops.add(new ItemStack(flowerPotBlockEntity.getContent(i)));
+      }
+    return drops;
   }
 
   @Override
