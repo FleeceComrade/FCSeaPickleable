@@ -8,6 +8,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -110,13 +111,18 @@ public class SeaPickledFlowerPotBlock extends AbstractSeaPickleableBlock impleme
 
   @Override
   public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    ItemStack inHand = player.getItemInHand(interactionHand);
+    // Let item placement expand or cycle the cluster before handling individual pot contents.
+    if (!player.isSecondaryUseActive() && inHand.is(Items.FLOWER_POT)) {
+      return InteractionResult.PASS;
+    }
+
     BlockEntity be = level.getBlockEntity(blockPos);
     if (!(be instanceof SeaPickledFlowerPotBlockEntity flowerPots)) return InteractionResult.PASS;
 
     int hitIndex = firstHitIndex(player, blockPos, blockHitResult, BOXES[blockState.getValue(QUANTITY) - 2]);
     if (hitIndex < 0) return InteractionResult.PASS;
 
-    ItemStack inHand = player.getItemInHand(interactionHand);
     Block heldBlock = inHand.getItem() instanceof BlockItem blockItem && canBePotted(blockItem.getBlock())
       ? blockItem.getBlock()
       : Blocks.AIR;
