@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(FlowerPotBlock.class)
 public class FlowerPotBlockMixin extends Block implements ISeaPickleableBlock {
@@ -17,9 +18,16 @@ public class FlowerPotBlockMixin extends Block implements ISeaPickleableBlock {
     super(Properties.of());
   }
 
+  @Shadow
+  public FlowerPotBlock getEmptyPot() {
+    return null;
+  }
+
+  //Todo: inject into use
+
   @Override
   public boolean isPickleable() {
-    return this.equals(Blocks.FLOWER_POT);
+    return this.getEmptyPot().equals(Blocks.FLOWER_POT);
   }
 
   @Override
