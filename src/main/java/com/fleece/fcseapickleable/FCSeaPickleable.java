@@ -4,7 +4,6 @@ import com.fleece.fcseapickleable.blockentity.SeaPickledFlowerPotBlockEntity;
 import com.fleece.fcseapickleable.registry.FCSPBlockEntityTypes;
 import com.fleece.fcseapickleable.render.ColorManager;
 import com.fleece.fcseapickleable.util.SimpleImmutableReferenceBiMap;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
@@ -31,6 +30,7 @@ import java.util.*;
 import static com.fleece.fcseapickleable.registry.FCSPBlockEntityTypes.BLOCK_ENTITY_TYPES;
 import static com.fleece.fcseapickleable.registry.FCSPBlocks.BLOCKS;
 
+@SuppressWarnings("unused")
 @Mod(FCSeaPickleable.MODID)
 public class FCSeaPickleable {
   //Todo: translations
@@ -69,6 +69,7 @@ public class FCSeaPickleable {
   )
   public static final class ClientModEvents {
 
+    @SuppressWarnings("unused")
     public enum CustomModelPots {
       CACTUS(new ResourceLocation("minecraft", "cactus")),
       BAMBOO(new ResourceLocation("minecraft", "bamboo")),
@@ -91,6 +92,7 @@ public class FCSeaPickleable {
       }
     }
 
+    @SuppressWarnings("unused")
     @SubscribeEvent
     public static void registerAdditionalModels(ModelEvent.RegisterAdditional event) {
       for (CustomModelPots pot : CustomModelPots.values()) {
@@ -98,6 +100,7 @@ public class FCSeaPickleable {
       }
     }
 
+    @SuppressWarnings("unused")
     @SubscribeEvent
     public static void bakingCompleted(ModelEvent.BakingCompleted event) {
       CustomModelPots.populateMap(event.getModels());

@@ -26,7 +26,7 @@ import java.util.List;
 
 import static com.fleece.fcseapickleable.FCSeaPickleable.copyAllSharedProperties;
 
-@SuppressWarnings({"deprecation", "NullableProblems"})
+@SuppressWarnings({"deprecation", "NullableProblems", "unused"})
 public abstract class AbstractSeaPickleableBlock extends Block implements ISeaPickleableBlock {
   public static final IntegerProperty QUANTITY = IntegerProperty.create("quantity", 2, 4);
 

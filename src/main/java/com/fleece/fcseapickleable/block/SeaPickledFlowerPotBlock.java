@@ -26,14 +26,17 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.fleece.fcseapickleable.FCSeaPickleable.joinShapes;
 import static com.fleece.fcseapickleable.blockentity.SeaPickledFlowerPotBlockEntity.POTTABLE;
 
+@SuppressWarnings("deprecation")
 public class SeaPickledFlowerPotBlock extends AbstractSeaPickleableBlock implements EntityBlock {
 
   public static final VoxelShape[][] BOXES = new VoxelShape[][] {
@@ -66,7 +69,7 @@ public class SeaPickledFlowerPotBlock extends AbstractSeaPickleableBlock impleme
   }
 
   @Override
-  public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+  public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
     return AABBS[blockState.getValue(QUANTITY) - 2];
   }
 
@@ -82,13 +85,13 @@ public class SeaPickledFlowerPotBlock extends AbstractSeaPickleableBlock impleme
     return super.getCloneItemStack(level, blockPos, blockState);
   }
 
-  @Override
+  @Override @ParametersAreNonnullByDefault
   public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
     return new SeaPickledFlowerPotBlockEntity(blockPos, blockState);
   }
 
   @Override
-  public List<ItemStack> getDrops(BlockState blockState, LootParams.Builder lootParamsBuilder) {
+  public @NotNull List<ItemStack> getDrops(BlockState blockState, LootParams.Builder lootParamsBuilder) {
     List<ItemStack> drops = new ArrayList<>();
     for (int i = 0; i < blockState.getValue(QUANTITY); i++) {
       drops.addAll(alternateBlock().getDrops(blockState, lootParamsBuilder).stream().filter(itemStack -> {
@@ -109,8 +112,8 @@ public class SeaPickledFlowerPotBlock extends AbstractSeaPickleableBlock impleme
     return drops;
   }
 
-  @Override
-  public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+  @Override @ParametersAreNonnullByDefault
+  public @NotNull InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
     ItemStack inHand = player.getItemInHand(interactionHand);
     // Let item placement expand or cycle the cluster before handling individual pot contents.
     if (!player.isSecondaryUseActive() && inHand.is(Items.FLOWER_POT)) {
@@ -205,7 +208,7 @@ public class SeaPickledFlowerPotBlock extends AbstractSeaPickleableBlock impleme
   }
 
   @Override
-  public boolean canBeReplaced(BlockState blockState, Fluid fluid) {
+  public boolean canBeReplaced(BlockState blockState, @NotNull Fluid fluid) {
     return blockState.getValue(QUANTITY) < 4;
   }
 }

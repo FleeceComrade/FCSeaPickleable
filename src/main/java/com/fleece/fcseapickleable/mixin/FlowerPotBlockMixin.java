@@ -14,12 +14,14 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+@SuppressWarnings({"deprecation", "SameReturnValue", "unused"})
 @Mixin(FlowerPotBlock.class)
 public class FlowerPotBlockMixin extends Block implements ISeaPickleableBlock {
 
@@ -55,7 +57,7 @@ public class FlowerPotBlockMixin extends Block implements ISeaPickleableBlock {
   }
 
   @Override
-  public boolean canBeReplaced(BlockState blockState, BlockPlaceContext context) {
+  public boolean canBeReplaced(@NotNull BlockState blockState, BlockPlaceContext context) {
     return !context.isSecondaryUseActive() && context.getItemInHand().is(Items.FLOWER_POT) || super.canBeReplaced(blockState, context);
   }
 }

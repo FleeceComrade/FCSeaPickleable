@@ -6,11 +6,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 
 import static com.fleece.fcseapickleable.registry.FCSPBlocks.SEAPICKLED_CHAIN;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "unused"})
 @Mixin(ChainBlock.class)
 public class ChainBlockMixin extends Block implements ISeaPickleableBlock {
 
@@ -29,7 +30,7 @@ public class ChainBlockMixin extends Block implements ISeaPickleableBlock {
   }
 
   @Override
-  public final boolean canBeReplaced(BlockState blockState, BlockPlaceContext context) {
+  public final boolean canBeReplaced(@NotNull BlockState blockState, BlockPlaceContext context) {
     return !context.isSecondaryUseActive() && context.getItemInHand().is(this.asItem()) || super.canBeReplaced(blockState, context);
   }
 }

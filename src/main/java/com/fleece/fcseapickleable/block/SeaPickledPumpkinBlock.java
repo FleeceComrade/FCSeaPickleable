@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 import static com.fleece.fcseapickleable.FCSeaPickleable.joinShapes;
 
@@ -38,7 +39,7 @@ public class SeaPickledPumpkinBlock extends AbstractSeaPickleableBlock {
   }
 
   @Override
-  public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+  public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
     return AABBS[blockState.getValue(QUANTITY) - 2];
   }
 }

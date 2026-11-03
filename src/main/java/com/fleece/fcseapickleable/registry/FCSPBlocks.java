@@ -9,6 +9,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import static com.fleece.fcseapickleable.FCSeaPickleable.MODID;
 
+@SuppressWarnings("unused")
 public class FCSPBlocks {
   public static final  DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
 

@@ -11,6 +11,7 @@ import static com.fleece.fcseapickleable.FCSeaPickleable.MODID;
 public class FCSPBlockEntityTypes {
   public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MODID);
 
+  @SuppressWarnings("DataFlowIssue")
   public static final RegistryObject<BlockEntityType<SeaPickledFlowerPotBlockEntity>> SEAPICKLED_FLOWERPOT = BLOCK_ENTITY_TYPES.register("seapickled_flowerpot",
     () -> BlockEntityType.Builder.of(SeaPickledFlowerPotBlockEntity::new, FCSPBlocks.SEAPICKLED_FLOWER_POT.get()).build(null));
 }

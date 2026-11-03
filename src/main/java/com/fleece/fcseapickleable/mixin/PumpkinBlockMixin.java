@@ -7,8 +7,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PumpkinBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 
+@SuppressWarnings({"deprecation", "unused"})
 @Mixin(PumpkinBlock.class)
 public class PumpkinBlockMixin extends Block implements ISeaPickleableBlock {
 
@@ -27,7 +29,7 @@ public class PumpkinBlockMixin extends Block implements ISeaPickleableBlock {
   }
 
   @Override
-  public boolean canBeReplaced(BlockState blockState, BlockPlaceContext context) {
+  public boolean canBeReplaced(@NotNull BlockState blockState, BlockPlaceContext context) {
     return !context.isSecondaryUseActive() && context.getItemInHand().is(this.asItem()) || super.canBeReplaced(blockState, context);
   }
 }

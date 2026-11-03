@@ -50,16 +50,13 @@ public class SeaPickledFlowerPotBlockEntity extends BlockEntity {
     return getBlockState().getValue(QUANTITY);
   }
 
+  @SuppressWarnings("BooleanMethodIsAlwaysInverted")
   public boolean canSetContents(int index, Block block) {
     if (index < 0 || index >= MAX_CONTENTS || index >= getQuantity() || block.equals(this.getContent(index))) {
       return false;
     }
 
-    if (!block.builtInRegistryHolder().is(POTTABLE)) {
-      return false;
-    }
-
-    return true;
+    return block.builtInRegistryHolder().is(POTTABLE);
   }
 
   public void setContents (int index, Block block) {
@@ -191,7 +188,7 @@ public class SeaPickledFlowerPotBlockEntity extends BlockEntity {
         this.coords = coords;
       }
 
-      public static Coords get(int quantity, int index) {
+      private static Coords get(int quantity, int index) {
         return CoordsByQuantity.values()[quantity - 2].coords[index];
       }
 
@@ -202,11 +199,12 @@ public class SeaPickledFlowerPotBlockEntity extends BlockEntity {
       this.blockRenderer = context.getBlockRenderDispatcher();
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public void render(
       SeaPickledFlowerPotBlockEntity blockEntity,
       float partialTick,
-      PoseStack poseStack,
+      @NotNull PoseStack poseStack,
       @NotNull MultiBufferSource bufferSource,
       int packedLight,
       int packedOverlay

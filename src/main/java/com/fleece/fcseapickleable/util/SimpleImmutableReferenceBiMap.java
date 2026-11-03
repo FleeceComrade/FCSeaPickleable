@@ -3,6 +3,7 @@ package com.fleece.fcseapickleable.util;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("CommentedOutCode")
 public class SimpleImmutableReferenceBiMap<K, V> {
   private boolean initialized = false;
   private final HashMap<K, V> verse;
@@ -24,13 +25,13 @@ public class SimpleImmutableReferenceBiMap<K, V> {
     return this;
   }
 
-  public V getValue(K k) {
-    return verse.get(k);
-  }
-
-  public K getKey(V v) {
-    return inverse.get(v);
-  }
+//  public V getValue(K k) {
+//    return verse.get(k);
+//  }
+//
+//  public K getKey(V v) {
+//    return inverse.get(v);
+//  }
 
   public V getValueOrDefault(K k, V d) {
     return verse.getOrDefault(k, d);

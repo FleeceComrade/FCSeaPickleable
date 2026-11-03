@@ -9,7 +9,7 @@ import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.state.BlockState;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "unused"})
 public class ColorManager {
     public static void register() {
          Minecraft.getInstance().getBlockColors().register(

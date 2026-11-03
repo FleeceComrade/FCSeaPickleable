@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import static com.fleece.fcseapickleable.registry.FCSPBlocks.SEAPICKLED_LANTERN;
 import static com.fleece.fcseapickleable.registry.FCSPBlocks.SEAPICKLED_SOUL_LANTERN;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings("ALL")
 @Mixin(LanternBlock.class)
 public class LanternBlockMixin extends Block implements ISeaPickleableBlock {
 

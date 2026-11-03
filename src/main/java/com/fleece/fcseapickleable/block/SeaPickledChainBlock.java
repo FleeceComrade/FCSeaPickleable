@@ -12,11 +12,14 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import static com.fleece.fcseapickleable.FCSeaPickleable.joinShapes;
 import static net.minecraft.core.Direction.Axis.X;
 import static net.minecraft.core.Direction.Axis.Y;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.AXIS;
 
+@SuppressWarnings("deprecation")
 public class SeaPickledChainBlock extends AbstractSeaPickleableBlock implements SimpleWaterloggedBlock {
 
   private static final VoxelShape[] AXIS_X_AABBS = new VoxelShape[]{
@@ -101,8 +104,8 @@ public class SeaPickledChainBlock extends AbstractSeaPickleableBlock implements 
     return AXIS_Z_AABBS[index];
   }
 
-  @Override
-  public VoxelShape getBlockSupportShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+  @Override @ParametersAreNonnullByDefault
+  public @NotNull VoxelShape getBlockSupportShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
     return Shapes.block();
   }
 }
