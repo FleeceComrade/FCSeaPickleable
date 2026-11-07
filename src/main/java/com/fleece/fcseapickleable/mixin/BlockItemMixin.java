@@ -5,6 +5,7 @@ import com.fleece.fcseapickleable.block.ISeaPickleableBlock;
 import com.fleece.fcseapickleable.block.SeaPickledFlowerPotBlock;
 import com.fleece.fcseapickleable.blockentity.SeaPickledFlowerPotBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
@@ -17,7 +18,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -47,7 +47,7 @@ public class BlockItemMixin {
           BlockEntity blockEntity = context.getLevel().getBlockEntity(context.getClickedPos());
 
           if (blockEntity instanceof SeaPickledFlowerPotBlockEntity flowerPotBlockEntity) {
-            cir.setReturnValue(POTTED_STUFF_BIMAP.getValueOrDefault(ForgeRegistries.BLOCKS.getKey(flowerPotBlockEntity.getContent(0)), Blocks.FLOWER_POT).defaultBlockState());
+            cir.setReturnValue(POTTED_STUFF_BIMAP.getValueOrDefault(BuiltInRegistries.BLOCK.getKey(flowerPotBlockEntity.getContent(0)), Blocks.FLOWER_POT).defaultBlockState());
           }
         } else {
           cir.setReturnValue(((ISeaPickleableBlock) inWorld.getBlock()).seaPickled(inWorld));
@@ -78,7 +78,7 @@ public class BlockItemMixin {
         if (flowerPotBlockEntity != null) {
           for (int i = 0; i < inWorld.getValue(QUANTITY); i++) {
             if (flowerPotBlockEntity.getContent(i).equals(Blocks.AIR)) continue;
-            potData.get().put(i, ForgeRegistries.BLOCKS.getKey(flowerPotBlockEntity.getContent(i)).toString());
+            potData.get().put(i, BuiltInRegistries.BLOCK.getKey(flowerPotBlockEntity.getContent(i)).toString());
           }
         } else {
           potData.get().put(0, POTTED_STUFF_BIMAP.getKeyOrDefault(inWorld.getBlock(), ResourceLocation.parse("minecraft:air")).toString());
@@ -100,14 +100,12 @@ public class BlockItemMixin {
     if (potData.get().isEmpty()) return;
     BlockState state = context.getLevel().getBlockState(context.getClickedPos());
 
-    if (state.getBlock() instanceof SeaPickledFlowerPotBlock && state.getValue(QUANTITY) == 2) {
-      ((SeaPickledFlowerPotBlockEntity) context.getLevel().getBlockEntity(context.getClickedPos())).setContents(0, ForgeRegistries.BLOCKS.getValue(ResourceLocation.parse(potData.get().get(0))));
-
-    } else if (state.is(BlockTags.FLOWER_POTS)) {
+    // Cluster contents are restored by the block entity tag hook.
+    if (state.is(BlockTags.FLOWER_POTS) && !(state.getBlock() instanceof SeaPickledFlowerPotBlock)) {
       potData.get().replace(0, "minecraft:air");
       for (String pottedBlockId : potData.get().values())
         if (!context.getPlayer().isCreative())
-          popResource(context.getLevel(), context.getClickedPos(), new ItemStack(ForgeRegistries.BLOCKS.getValue(ResourceLocation.parse(pottedBlockId))));
+          popResource(context.getLevel(), context.getClickedPos(), new ItemStack(BuiltInRegistries.BLOCK.get(ResourceLocation.parse(pottedBlockId))));
     }
 
     potData.get().clear();
@@ -124,9 +122,8 @@ public class BlockItemMixin {
     if (!(blockEntity instanceof SeaPickledFlowerPotBlockEntity flowerPotBlockEntity)) return;
 
     for (Map.Entry<Integer, String> entry : potData.get().entrySet()) {
-      Block block = ForgeRegistries.BLOCKS.getValue(ResourceLocation.parse(entry.getValue()));
-      if (block != null)
-        flowerPotBlockEntity.setContents(entry.getKey(), block);
+      Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(entry.getValue()));
+      flowerPotBlockEntity.setContents(entry.getKey(), block);
     }
 
     flowerPotBlockEntity.setChanged();

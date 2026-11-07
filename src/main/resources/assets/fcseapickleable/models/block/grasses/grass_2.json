@@ -1,7 +1,7 @@
 {
   "parent": "fcseapickleable:block/grasses/tinted_cross_2",
   "textures": {
-    "cross": "minecraft:block/grass",
+    "cross": "minecraft:block/short_grass",
     "cross2": "fcseapickleable:block/grasses/small_grass"
   }
 }

@@ -6,6 +6,8 @@ import com.fleece.fcseapickleable.render.ColorManager;
 import com.fleece.fcseapickleable.util.SimpleImmutableReferenceBiMap;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -15,15 +17,15 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.client.event.ModelEvent;
 
 import java.util.*;
 
@@ -33,18 +35,16 @@ import static com.fleece.fcseapickleable.registry.FCSPBlocks.BLOCKS;
 @SuppressWarnings("unused")
 @Mod(FCSeaPickleable.MODID)
 public class FCSeaPickleable {
-  //Todo: translations
   public static final String MODID = "fcseapickleable";
   public static final SimpleImmutableReferenceBiMap<ResourceLocation, Block> POTTED_STUFF_BIMAP = new SimpleImmutableReferenceBiMap<>();
   public static final Map<Block, BakedModel> CUSTOM_POT_BY_BLOCK = new HashMap<>();
 
 
-  public FCSeaPickleable(FMLJavaModLoadingContext context) {
-    IEventBus bus = context.getModEventBus();
-    bus.addListener(this::clientSetup);
-    bus.addListener(this::commonSetup);
-    BLOCKS.register(bus);
-    BLOCK_ENTITY_TYPES.register(bus);
+  public FCSeaPickleable(IEventBus eventBus, ModContainer modContainer) {
+    eventBus.addListener(this::clientSetup);
+    eventBus.addListener(this::commonSetup);
+    BLOCKS.register(eventBus);
+    BLOCK_ENTITY_TYPES.register(eventBus);
   }
 
   public void commonSetup(final FMLCommonSetupEvent event) {
@@ -62,45 +62,43 @@ public class FCSeaPickleable {
     });
   }
 
-  @Mod.EventBusSubscriber(
+  @SuppressWarnings({"removal", "unused"})
+  @EventBusSubscriber(
     modid = MODID,
-    bus = Mod.EventBusSubscriber.Bus.MOD,
+    bus = EventBusSubscriber.Bus.MOD,
     value = Dist.CLIENT
   )
   public static final class ClientModEvents {
 
-    @SuppressWarnings("unused")
     public enum CustomModelPots {
-      CACTUS(new ResourceLocation("minecraft", "cactus")),
-      BAMBOO(new ResourceLocation("minecraft", "bamboo")),
-      CRIMSON_ROOTS(new ResourceLocation("minecraft", "crimson_roots")),
-      WARPED_ROOTS(new ResourceLocation("minecraft", "warped_roots")),
-      AZALEA(new ResourceLocation("minecraft", "azalea")),
-      FLOWERING_AZALEA(new ResourceLocation("minecraft", "flowering_azalea"));
+      CACTUS(ResourceLocation.fromNamespaceAndPath("minecraft", "cactus")),
+      BAMBOO(ResourceLocation.fromNamespaceAndPath("minecraft", "bamboo")),
+      CRIMSON_ROOTS(ResourceLocation.fromNamespaceAndPath("minecraft", "crimson_roots")),
+      WARPED_ROOTS(ResourceLocation.fromNamespaceAndPath("minecraft", "warped_roots")),
+      AZALEA(ResourceLocation.fromNamespaceAndPath("minecraft", "azalea")),
+      FLOWERING_AZALEA(ResourceLocation.fromNamespaceAndPath("minecraft", "flowering_azalea"));
       private final ResourceLocation blockId;
 
-      private final ResourceLocation location = new ResourceLocation(FCSeaPickleable.MODID, "block/pots/custom/" + this.name().toLowerCase());
+      private final ResourceLocation location = ResourceLocation.fromNamespaceAndPath(FCSeaPickleable.MODID, "block/pots/custom/" + this.name().toLowerCase());
 
       CustomModelPots(ResourceLocation blockId) {
         this.blockId = blockId;
       }
 
-      public static void populateMap(Map<ResourceLocation, BakedModel> models) {
+      public static void populateMap(Map<ModelResourceLocation, BakedModel> models) {
         CUSTOM_POT_BY_BLOCK.clear();
         for (CustomModelPots value : CustomModelPots.values())
-          CUSTOM_POT_BY_BLOCK.put(ForgeRegistries.BLOCKS.getValue(value.blockId), models.get(value.location));
+          CUSTOM_POT_BY_BLOCK.put(BuiltInRegistries.BLOCK.get(value.blockId), models.get(ModelResourceLocation.standalone(value.location)));
       }
     }
 
-    @SuppressWarnings("unused")
     @SubscribeEvent
     public static void registerAdditionalModels(ModelEvent.RegisterAdditional event) {
       for (CustomModelPots pot : CustomModelPots.values()) {
-        event.register(pot.location);
+        event.register(ModelResourceLocation.standalone(pot.location));
       }
     }
 
-    @SuppressWarnings("unused")
     @SubscribeEvent
     public static void bakingCompleted(ModelEvent.BakingCompleted event) {
       CustomModelPots.populateMap(event.getModels());

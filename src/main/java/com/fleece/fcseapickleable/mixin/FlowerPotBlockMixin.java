@@ -4,8 +4,9 @@ import com.fleece.fcseapickleable.block.ISeaPickleableBlock;
 import com.fleece.fcseapickleable.registry.FCSPBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -21,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@SuppressWarnings({"deprecation", "SameReturnValue", "unused"})
+@SuppressWarnings({"SameReturnValue", "unused"})
 @Mixin(FlowerPotBlock.class)
 public class FlowerPotBlockMixin extends Block implements ISeaPickleableBlock {
 
@@ -34,15 +35,12 @@ public class FlowerPotBlockMixin extends Block implements ISeaPickleableBlock {
     return null;
   }
 
-  /**
-   * Lets a held flower pot reach item placement before vanilla consumes the click or removes a plant.
-   */
-  @Inject(method = "use", at = @At("HEAD"), cancellable = true)
-  private void fc$allowClustering(BlockState state, Level level, BlockPos pos, Player player,
+  @Inject(method = "useItemOn", at = @At("HEAD"), cancellable = true)
+  private void onUseItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
                                   InteractionHand hand, BlockHitResult hit,
-                                  CallbackInfoReturnable<InteractionResult> cir) {
-    if (this.isPickleable() && !player.isSecondaryUseActive() && player.getItemInHand(hand).is(Items.FLOWER_POT)) {
-      cir.setReturnValue(InteractionResult.PASS);
+                                  CallbackInfoReturnable<ItemInteractionResult> cir) {
+    if (this.isPickleable() && !player.isSecondaryUseActive() && stack.is(Items.FLOWER_POT)) {
+      cir.setReturnValue(ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION);
     }
   }
 

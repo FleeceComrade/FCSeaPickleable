@@ -19,7 +19,6 @@ import static net.minecraft.core.Direction.Axis.X;
 import static net.minecraft.core.Direction.Axis.Y;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.AXIS;
 
-@SuppressWarnings("deprecation")
 public class SeaPickledChainBlock extends AbstractSeaPickleableBlock implements SimpleWaterloggedBlock {
 
   private static final VoxelShape[] AXIS_X_AABBS = new VoxelShape[]{

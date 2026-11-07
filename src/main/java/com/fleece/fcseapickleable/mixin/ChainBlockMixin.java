@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 
 import static com.fleece.fcseapickleable.registry.FCSPBlocks.SEAPICKLED_CHAIN;
 
-@SuppressWarnings({"deprecation", "unused"})
+@SuppressWarnings("unused")
 @Mixin(ChainBlock.class)
 public class ChainBlockMixin extends Block implements ISeaPickleableBlock {
 

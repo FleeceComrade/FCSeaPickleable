@@ -2,15 +2,19 @@ package com.fleece.fcseapickleable.block;
 
 import com.fleece.fcseapickleable.blockentity.SeaPickledFlowerPotBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
@@ -33,6 +37,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.fleece.fcseapickleable.FCSeaPickleable.copyAllSharedProperties;
 import static com.fleece.fcseapickleable.FCSeaPickleable.joinShapes;
 import static com.fleece.fcseapickleable.blockentity.SeaPickledFlowerPotBlockEntity.POTTABLE;
 
@@ -74,15 +79,15 @@ public class SeaPickledFlowerPotBlock extends AbstractSeaPickleableBlock impleme
   }
 
   @Override
-  public ItemStack getCloneItemStack(BlockState blockState, HitResult hitResult, BlockGetter level, BlockPos blockPos, Player player) {
+  public @NotNull ItemStack getCloneItemStack(BlockState blockState, HitResult hitResult, LevelReader levelReader, BlockPos blockPos, Player player) {
     if (player.isShiftKeyDown())
       return new ItemStack(Blocks.FLOWER_POT);
 
-    BlockEntity blockEntity = level.getBlockEntity(blockPos);
+    BlockEntity blockEntity = levelReader.getBlockEntity(blockPos);
     if (blockEntity instanceof SeaPickledFlowerPotBlockEntity flowerPotBlockEntity && hitResult instanceof BlockHitResult blockHitResult)
       return new ItemStack(flowerPotBlockEntity.getContent(firstHitIndex(player, blockPos, blockHitResult, BOXES[blockState.getValue(QUANTITY) - 2])));
 
-    return super.getCloneItemStack(level, blockPos, blockState);
+    return super.getCloneItemStack(levelReader, blockPos, blockState);
   }
 
   @Override @ParametersAreNonnullByDefault
@@ -94,7 +99,7 @@ public class SeaPickledFlowerPotBlock extends AbstractSeaPickleableBlock impleme
   public @NotNull List<ItemStack> getDrops(BlockState blockState, LootParams.Builder lootParamsBuilder) {
     List<ItemStack> drops = new ArrayList<>();
     for (int i = 0; i < blockState.getValue(QUANTITY); i++) {
-      drops.addAll(alternateBlock().getDrops(blockState, lootParamsBuilder).stream().filter(itemStack -> {
+      drops.addAll(copyAllSharedProperties(blockState, alternateBlock().defaultBlockState()).getDrops(lootParamsBuilder).stream().filter(itemStack -> {
         for (ItemStack drop : drops) {
           if (drop.getItem().equals(itemStack.getItem())) {
             drop.grow(itemStack.getCount());
@@ -113,18 +118,19 @@ public class SeaPickledFlowerPotBlock extends AbstractSeaPickleableBlock impleme
   }
 
   @Override @ParametersAreNonnullByDefault
-  public @NotNull InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+  protected @NotNull ItemInteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
     ItemStack inHand = player.getItemInHand(interactionHand);
-    // Let item placement expand or cycle the cluster before handling individual pot contents.
     if (!player.isSecondaryUseActive() && inHand.is(Items.FLOWER_POT)) {
-      return InteractionResult.PASS;
+      return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     BlockEntity be = level.getBlockEntity(blockPos);
-    if (!(be instanceof SeaPickledFlowerPotBlockEntity flowerPots)) return InteractionResult.PASS;
+    if (!(be instanceof SeaPickledFlowerPotBlockEntity flowerPots)) {
+      return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
 
     int hitIndex = firstHitIndex(player, blockPos, blockHitResult, BOXES[blockState.getValue(QUANTITY) - 2]);
-    if (hitIndex < 0) return InteractionResult.PASS;
+    if (hitIndex < 0) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
     Block heldBlock = inHand.getItem() instanceof BlockItem blockItem && canBePotted(blockItem.getBlock())
       ? blockItem.getBlock()
@@ -136,9 +142,9 @@ public class SeaPickledFlowerPotBlock extends AbstractSeaPickleableBlock impleme
     boolean isEmpty = content == Blocks.AIR;
     boolean isCreative = player.getAbilities().instabuild;
 
-    if (isPottable && heldBlock == content) return InteractionResult.CONSUME;
-    if (!isPottable && isEmpty) return InteractionResult.CONSUME;
-    if (isPottable && isEmpty && !flowerPots.canSetContents(hitIndex, heldBlock)) return InteractionResult.CONSUME;
+    if (isPottable && heldBlock == content) return ItemInteractionResult.CONSUME;
+    if (!isPottable && isEmpty) return ItemInteractionResult.CONSUME;
+    if (isPottable && isEmpty && !flowerPots.canSetContents(hitIndex, heldBlock)) return ItemInteractionResult.CONSUME;
 
     if (!level.isClientSide) {
       if (isPottable) {
@@ -169,7 +175,7 @@ public class SeaPickledFlowerPotBlock extends AbstractSeaPickleableBlock impleme
       level.gameEvent(player, GameEvent.BLOCK_CHANGE, blockPos);
     }
 
-    return InteractionResult.sidedSuccess(level.isClientSide);
+    return ItemInteractionResult.sidedSuccess(level.isClientSide);
   }
 
   public static boolean canBePotted(Block block) {

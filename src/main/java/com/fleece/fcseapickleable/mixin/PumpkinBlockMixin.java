@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 
-@SuppressWarnings({"deprecation", "unused"})
+@SuppressWarnings("unused")
 @Mixin(PumpkinBlock.class)
 public class PumpkinBlockMixin extends Block implements ISeaPickleableBlock {
 

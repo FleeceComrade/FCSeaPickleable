@@ -26,7 +26,7 @@ import java.util.List;
 
 import static com.fleece.fcseapickleable.FCSeaPickleable.copyAllSharedProperties;
 
-@SuppressWarnings({"deprecation", "NullableProblems", "unused"})
+@SuppressWarnings({"NullableProblems", "unused"})
 public abstract class AbstractSeaPickleableBlock extends Block implements ISeaPickleableBlock {
   public static final IntegerProperty QUANTITY = IntegerProperty.create("quantity", 2, 4);
 
@@ -43,7 +43,7 @@ public abstract class AbstractSeaPickleableBlock extends Block implements ISeaPi
 
   private static Properties initProps(Block alternateBlock) {
     CTOR_ALTERNATE.set(alternateBlock);
-    return Properties.copy(alternateBlock);
+    return Properties.ofFullCopy(alternateBlock);
   }
 
   /**
@@ -57,28 +57,33 @@ public abstract class AbstractSeaPickleableBlock extends Block implements ISeaPi
    * These <i>Shouldn't</i> be overridden but will not be made final in case they're needed for some unforeseen reason
    */
 
-  public boolean canSurvive(BlockState state, LevelReader levelReader, BlockPos blockPos) {
-    return alternateBlock().canSurvive(state, levelReader, blockPos);
+  public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
+    return copyAllSharedProperties(blockState, alternateBlock().defaultBlockState()).canSurvive(levelReader, blockPos);
   }
 
 
-  public BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState1, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos1) {
-    return alternateBlock().updateShape(blockState, direction, blockState1, levelAccessor, blockPos, blockPos1);
+  @Override
+  protected BlockState updateShape(BlockState blockState, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos neighborPos) {
+    BlockState updatedAlternate = copyAllSharedProperties(blockState, alternateBlock().defaultBlockState()).updateShape(direction, neighborState, levelAccessor, blockPos, neighborPos);
+
+    return updatedAlternate.is(alternateBlock())
+      ? copyAllSharedProperties(updatedAlternate, blockState)
+      : updatedAlternate;
   }
 
   public FluidState getFluidState(BlockState blockState) {
-    return alternateBlock().getFluidState(blockState);
+    return copyAllSharedProperties(blockState, alternateBlock().defaultBlockState()).getFluidState();
   }
 
   public boolean isPathfindable(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, PathComputationType type) {
-    return alternateBlock().isPathfindable(blockState, blockGetter, blockPos, type);
+    return copyAllSharedProperties(blockState, alternateBlock().defaultBlockState()).isPathfindable(type);
   }
 
   @Override
   public List<ItemStack> getDrops(BlockState blockState, LootParams.Builder lootParamsBuilder) {
     List<ItemStack> drops = new ArrayList<>();
     for (int i = 0; i < blockState.getValue(QUANTITY); i++) {
-      drops.addAll(alternateBlock().getDrops(blockState, lootParamsBuilder).stream().filter(itemStack -> {
+      drops.addAll(copyAllSharedProperties(blockState, alternateBlock().defaultBlockState()).getDrops(lootParamsBuilder).stream().filter(itemStack -> {
         for (ItemStack drop : drops) {
           if (drop.getItem().equals(itemStack.getItem())) {
             drop.grow(itemStack.getCount());
@@ -92,8 +97,8 @@ public abstract class AbstractSeaPickleableBlock extends Block implements ISeaPi
   }
 
   @Override
-  public ItemStack getCloneItemStack(BlockState blockState, HitResult hitResult, BlockGetter blockGetter, BlockPos blockPos, Player player) {
-    return alternateBlock().getCloneItemStack(blockState, hitResult, blockGetter, blockPos, player);
+  public ItemStack getCloneItemStack(BlockState blockState, HitResult hitResult, LevelReader levelReader, BlockPos blockPos, Player player) {
+    return alternateBlock().getCloneItemStack(blockState, hitResult, levelReader, blockPos, player);
   }
 
   /**

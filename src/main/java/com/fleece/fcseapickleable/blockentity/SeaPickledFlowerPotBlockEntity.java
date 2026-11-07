@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -22,7 +23,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 
 import static com.fleece.fcseapickleable.FCSeaPickleable.*;
@@ -116,26 +117,26 @@ public class SeaPickledFlowerPotBlockEntity extends BlockEntity {
   }
 
   @Override
-  protected void saveAdditional(@NotNull CompoundTag tag) {
-    super.saveAdditional(tag);
+  protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
+    super.saveAdditional(tag, registries);
     saveContents(tag);
   }
 
   @Override
-  public void load(@NotNull CompoundTag tag) {
-    super.load(tag);
+  protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
+    super.loadAdditional(tag, registries);
     loadContents(tag);
   }
 
   @Override
-  public @NotNull CompoundTag getUpdateTag() {
+  public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {
     CompoundTag tag = new CompoundTag();
     saveContents(tag);
     return tag;
   }
 
   @Override
-  public void handleUpdateTag(CompoundTag tag) {
+  public void handleUpdateTag(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider lookupProvider) {
     loadContents(tag);
   }
 
@@ -145,15 +146,10 @@ public class SeaPickledFlowerPotBlockEntity extends BlockEntity {
   }
 
   @Override
-  public void onDataPacket(
-    Connection connection,
-    ClientboundBlockEntityDataPacket packet
-  ) {
+  public void onDataPacket(@NotNull Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.@NotNull Provider lookupProvider) {
     CompoundTag tag = packet.getTag();
 
-    if (tag != null) {
-      handleUpdateTag(tag);
-    }
+    handleUpdateTag(tag, lookupProvider);
   }
 
   public void removeContent(int index) {

@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 
-@SuppressWarnings({"deprecation", "unused"})
+@SuppressWarnings("unused")
 @Mixin(TallGrassBlock.class)
 public class TallGrassBlockMixin extends Block implements ISeaPickleableBlock {
 
@@ -20,14 +20,14 @@ public class TallGrassBlockMixin extends Block implements ISeaPickleableBlock {
 
   @Override
   public boolean isPickleable() {
-    return this.equals(Blocks.FERN) || this.equals(Blocks.GRASS);
+    return this.equals(Blocks.FERN) || this.equals(Blocks.SHORT_GRASS);
   }
 
   @Override
   public Block alternateBlock() {
     if (Blocks.FERN.equals(this))
       return FCSPBlocks.SEAPICKLED_FERN.get();
-    if (Blocks.GRASS.equals(this))
+    if (Blocks.SHORT_GRASS.equals(this))
       return FCSPBlocks.SEAPICKLED_GRASS.get();
     throw new IllegalStateException("Contact FleeceComrade, author of FC's Seapickleable, he did something wrong if you are seeing this! fleececomrade@gmail.com or FleeceComradeMods on Curseforge.");
   }
